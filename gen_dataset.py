@@ -2,33 +2,66 @@ import random
 
 def fill_grid():
     #Creating empty dataset to represent grid (2D-matrix)
-    grid = [[0]*9]*9
+    grid = [[0 for row in range(9)] for col in range(9)]
 
-    #Backtracking algorithm for generating a puzzle with a solution
     for row in range(9):
-        for col in range(9):
-            #Choosing and assigning valid number from 1-9 that could go in square
+        r = 3*round(row//3)
+        
+        for col in range(r, r+3):
             num = random.randint(1,9)
 
-            #If num is valid, we insert otherwise else leave it empty
+            while square_has_num(grid, num, row, col):
+                num = random.randint(1,9)
+        
+            grid[row][col] = num
+    fill_nondiagonal(grid)
+    print_grid(grid)
+    return grid
+ 
+def fill_nondiagonal(grid):
+    if table_filled(grid):
+        return True
+    else:
+        (row, col) = located_next_empty(grid)
+        
+        for num in range(1,10):
             if check_num_is_valid(grid, num, row, col):
                 grid[row][col] = num
-    #Solved sudoku, copy values (no reference)
-    res_grid = grid[:]
+                if fill_nondiagonal(grid):
+                    return True
+                grid[row][col] = 0
+        return False                
 
-    #<Removing k entries>
+def located_next_empty(grid):
+    for row in range(9):
+        for col in range(9):
+            if grid[row][col]==0:
+                return (row, col)
     
-    return grid
+
+def table_filled(grid):
+    for row in range(9):
+        for col in range(9):
+            if grid[row][col]==0:
+                return False
+    return True
 
 
 #Helper function for checking if num is not already in row, col, or square
 def check_num_is_valid(grid, num, grid_row, grid_col):
-
-    if num in grid[grid_row] or num in grid[grid_col] or square_has_num(grid, num, grid_row, grid_col):
+    if num in set(grid[grid_row]) or num_in_col(grid, num, grid_col):
         return False
     else:
         return True
 
+#Check col
+def num_in_col(grid, num, col):
+    for row in range(9):
+        if grid[row][col] == num:
+            return True
+    return False
+
+#Helper function for checking if square portions already contain given num
 def square_has_num(grid, num, grid_row, grid_col):
     #Get the 3x3 rows and cols for the input by using nearest multiple of 3
     #To get nearest mult of 3 used formula: base*round(num-1/base)
@@ -37,14 +70,16 @@ def square_has_num(grid, num, grid_row, grid_col):
 
     for row_cell in range(row, row+3):
         for col_cell in range(col, col+3):
-            if num in grid[row_cell][col_cell]:
-                return False
-    
-    return True
+           if grid[row_cell][col_cell]==num:
+                return True
 
+    return False
 
+def print_grid(grid):
+    for row in range(9):
+        for col in range(9):
+            print(str(grid[row][col]) + " ", end='')
+        print("")
+    print("")
 
-
-    
-
-
+fill_grid()
