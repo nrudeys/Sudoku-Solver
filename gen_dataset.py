@@ -10,33 +10,17 @@ def fill_grid():
     #Creating empty dataset to represent grid (2D-matrix)
     grid = [[0 for row in range(9)] for col in range(9)]
 
-    #Going through each cell in grid (filling diagonal)
-    for row in grid_indices:
-
-        #Get upper left cell for square according to row #
-        r = 3*round(row//3)
-        
-        #Going to check the 3 columns in current square
-        for col in range(r, r+3):
-
-            #Generating random number from 1 to 9
-            num = random.randint(1,9)
-
-            #Since we are only doing diagonal squares, we only need to check
-            #if current square does not contain chosen num, we only update the cell
-            #with num once we confirm it's valid
-            while square_has_num(grid, num, row, col):
-                num = random.randint(1,9)
-        
-            grid[row][col] = num
+    fill_diagonal(grid)
 
     #Fill the rest of the grid        
     completed_puzzle = fill_nondiagonal(grid)
 
     #Print values
+    print("Complete")
     print_grid(grid)
 
     remove_entries(grid)
+    print("Removed")
     print_grid(grid)
     return grid
  
@@ -57,7 +41,7 @@ def fill_nondiagonal(grid):
         #update the cell with the next possible number. The point of this is to try each possible
         #combination to reach a solution
         for num in possible_nums:
-            if check_num_is_valid(grid, num, row, col):
+            if check_num_is_valid(grid, num, row, col) and not square_has_num(grid, num, row, col):
                 grid[row][col] = num
 
                 #We found a solution
@@ -82,9 +66,9 @@ def remove_entries(grid):
         
         while k > 64:
             #Avoiding 8 since we don't want a case in which its all 8 makes a loop
-            k = random.randint(5,7)            
+            k = random.randint(4,6)            
         count+=k
-        delete = set(random.sample(range(len(grid[row])), k))
+        delete = set(random.sample(range(len(grid[row])), k+1))
         grid[row] = [num if num not in delete else 0 for num in grid[row]]
     return grid
 
@@ -119,6 +103,7 @@ def num_in_col(grid, num, col):
             return True
     return False
 
+#SQUARE ISN'T WORKING RIGHT FIX FIX FIX
 #Helper function for checking if square portions already contain given num
 def square_has_num(grid, num, grid_row, grid_col):
     #Get the 3x3 rows and cols for the input by using nearest multiple of 3
@@ -140,5 +125,26 @@ def print_grid(grid):
             print(str(grid[row][col]) + " ", end='')
         print("")
     print("")
+
+def fill_diagonal(grid):
+    #Going through each cell in grid (filling diagonal)
+    for row in grid_indices:
+
+        #Get upper left cell for square according to row #
+        r = 3*round(row//3)
+        
+        #Going to check the 3 columns in current square
+        for col in range(r, r+3):
+
+            #Generating random number from 1 to 9
+            num = random.randint(1,9)
+
+            #Since we are only doing diagonal squares, we only need to check
+            #if current square does not contain chosen num, we only update the cell
+            #with num once we confirm it's valid
+            while square_has_num(grid, num, row, col):
+                num = random.randint(1,9)
+        
+            grid[row][col] = num
 
 fill_grid()
