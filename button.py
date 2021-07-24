@@ -29,8 +29,17 @@ while running:
         if mouse[1] >= 180 and mouse[1] <= 220:
             pygame.draw.rect(screen, (255, 204, 255), pygame.Rect(215, 180, 120, 40))
             pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(215, 180, 120, 40), 3)
+            pygame.draw.rect(screen, (192, 192, 192), pygame.Rect(215, 250, 120, 40))
+            pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(215, 250, 120, 40), 3)
         elif mouse[1] >= 250 and mouse[1] <= 290:
+            pygame.draw.rect(screen, (192, 192, 192), pygame.Rect(215, 180, 120, 40))
+            pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(215, 180, 120, 40), 3)
             pygame.draw.rect(screen, (255, 204, 255), pygame.Rect(215, 250, 120, 40))
+            pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(215, 250, 120, 40), 3)
+        else:
+            pygame.draw.rect(screen, (192, 192, 192), pygame.Rect(215, 180, 120, 40))
+            pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(215, 180, 120, 40), 3)
+            pygame.draw.rect(screen, (192, 192, 192), pygame.Rect(215, 250, 120, 40))
             pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(215, 250, 120, 40), 3)
     else:
         pygame.draw.rect(screen, (192, 192, 192), pygame.Rect(215, 180, 120, 40))
