@@ -1,0 +1,16 @@
+                     INSTRUCTIONS
+------------------------------------------------------
+RULES: Enter a number from 1 to 9 in each of the cells 
+       in the grid ensuring each of the rows, columns,
+       and square boxes contain each of these number 
+       with no repeats
+
+CONTROLS: 1) NEW GAME: start a new game
+        
+          2) GENERATE SOLUTION: generating a solution 
+             for given puzzle
+
+          3) VERIFY SOLUTION: enter a solution and
+             check if it is valid
+
+          4) BACK: return to home screen
