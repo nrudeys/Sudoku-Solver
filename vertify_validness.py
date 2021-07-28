@@ -1,8 +1,5 @@
 from solve_dataset import *
 
-#Generating a solution
-grid = solve_puzzle(fill_grid())
-
 #We can verify the correctness of a sudoku puzzle by checking if each row, col, and square have the sum of 45
 #(already checking for uniqueness earlier on)
 def verify_validness(grid):
@@ -60,5 +57,3 @@ def verify_square(grid, grid_row, grid_col):
         return False
 
     return True
-
-print(verify_validness(grid))
