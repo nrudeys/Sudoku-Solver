@@ -35,6 +35,12 @@ info = False
 back = False
 verify = False
 blurred = False
+mouse = ()
+grid = []
+grid_copy = []
+last_key_loc = ()
+arrows = False
+not_arrows = False
 
 while running: 
     for event in pygame.event.get():
@@ -48,20 +54,27 @@ while running:
                 if mouse[1] >= 180 and mouse[1] <= 220 and not started:
                     reset_screen(screen, (255, 255, 255))
 
+                    if back:
+                        board_setup(screen)
+                        fill_board(None, grid, screen, num_font, (0,0,0))
+                        get_diff_of_grids(grid, grid_copy, screen, num_font)
+
+                    else:
+                        #Setting up board
+                        board_setup(screen)
+                        
+                        #Generating a incomplete puzzle and filling the board with those values
+                        grid = fill_grid()     
+                        used_locations = fill_board(None, grid, screen, num_font, (0,0,0))
+                        grid_copy = [row[:] for row in grid]
+
                     #Updating flags (game started, info and back not clicked)
                     started = True
                     back = False
                     info = False
                     blurred = False
                     verify=False
-
-                    #Setting up board
-                    board_setup(screen)
-                    
-                    #Generating a incomplete puzzle and filling the board with those values
-                    grid = fill_grid()     
-                    used_locations = fill_board(None, grid, screen, num_font, (0,0,0))
-                    grid_copy = [row[:] for row in grid]
+                    last_key_loc = ()
 
                 #INFO BUTTON
                 elif mouse[1] >= 250 and mouse[1] <= 290 and not started:
@@ -85,6 +98,7 @@ while running:
                     grid_copy = [row[:] for row in grid]
 
                     verify=False
+                    last_key_loc = ()
                 
                 ##GENERATE SOLUTION BUTTON
                 elif mouse[0] >=160 and mouse[0]<=260:
@@ -138,20 +152,172 @@ while running:
                 reset_screen(screen, (255,255,255))
                 image = pygame.image.load("current_grid.jpeg").convert_alpha()
                 screen.blit(image, (0, 0))
+                
                 verify = False
                 blurred = False
 
         #ENTERING NUMS FOR VERIFY
         if event.type == pygame.KEYDOWN:
-            input_num = event.unicode
+            input_num = event.unicode    
 
             #Indices
             if input_num.isnumeric() and int(input_num) >= 1 and int(input_num) <= 9 and not any((get_range(mouse[0]), get_range(mouse[1])) in x for x in used_locations):
+                if arrows and grid_copy[int(get_range(last_key_loc[1])/60)][int(get_range(last_key_loc[0])/60)] != 0:
+                    pygame.draw.rect(screen,(255, 255, 255), pygame.Rect(get_range(last_key_loc[0])+3, get_range(last_key_loc[1])+3, 56, 56))
                 highlight_cell(screen, mouse, grid)
-                pygame.draw.rect(screen,(255, 255, 255), pygame.Rect(get_range(mouse[0]), get_range(mouse[1]), 0, 60))
                 screen.blit(num_font.render(input_num , True , (255,0,0)) , (25+get_range(mouse[0]), (25+get_range(mouse[1]))))
                 grid_copy[int(get_range(mouse[1])/60)][int(get_range(mouse[0])/60)] = int(input_num)
+               
+                last_key_loc = mouse
+ 
+            if event.key == pygame.K_DELETE:
+                reset_screen(screen, (255,255,255))
+                board_setup(screen)
+                fill_board(None, grid, screen, num_font, (0,0,0))
+                grid_copy = [row[:] for row in grid]
 
+                verify = False
+                blurred = False
+
+            if event.key == pygame.K_BACKSPACE and not any((get_range(mouse[0]), get_range(mouse[1])) in x for x in used_locations):
+                unhighlight_cell(screen, mouse, grid)
+                grid_copy[int(get_range(mouse[1])/60)][int(get_range(mouse[0])/60)] = 0
+
+            if event.key == pygame.K_UP or event.key == pygame.K_DOWN or event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                arrows = True
+            else:
+                arrows = False
+
+            if event.key == pygame.K_UP:
+                #First time up key is used
+                if last_key_loc == ():
+                    available_spot = not any((get_range(mouse[0]), get_range(mouse[1])) in x for x in used_locations)
+
+                    if available_spot:
+                        #Highlight available spot 
+                        pygame.draw.rect(screen,(255, 204, 255), pygame.Rect(get_range(mouse[0])+3, get_range(mouse[1])+3, 56, 56))
+                    
+                    #Update last key loc
+                    last_key_loc = (mouse[0], mouse[1])
+                
+                else:
+                    if last_key_loc[1] != 0:
+                        available_spot = not any((get_range(last_key_loc[0]), get_range(last_key_loc[1])-60) in x for x in used_locations)
+
+                        #Spot is available, remove last highlighted spot and advance 
+                        if available_spot:
+                            if (not any((get_range(last_key_loc[0]), get_range(last_key_loc[1])) in x for x in used_locations)
+                                and grid[int((get_range(last_key_loc[1]))/60)][int((get_range(last_key_loc[0]))/60)] == grid_copy[int((get_range(last_key_loc[1]))/60)][int((get_range(last_key_loc[0]))/60)]):
+                                pygame.draw.rect(screen,(255, 255, 255), pygame.Rect(get_range(last_key_loc[0])+3, get_range(last_key_loc[1])+3, 56, 56))                           
+                            pygame.draw.rect(screen,(255, 204, 255), pygame.Rect(get_range(last_key_loc[0])+3, (get_range(last_key_loc[1])-60)+3, 56, 56))
+
+                        #spot is unavailable, remove last highted spot and advance but do not hightlight
+                        else:
+                            if not any((get_range(last_key_loc[0]), get_range(last_key_loc[1])) in x for x in used_locations) and not get_range(last_key_loc[1])-60 <=0:
+                                pygame.draw.rect(screen,(255, 255, 255), pygame.Rect(get_range(last_key_loc[0])+3, get_range(last_key_loc[1])+3, 56, 56))
+
+                        if get_range(last_key_loc[1])-60 < 0:
+                            last_key_loc = (get_range(last_key_loc[0]), 0)
+                        else:
+                            last_key_loc = (get_range(last_key_loc[0]), get_range(last_key_loc[1])-60)
+                            
+            if event.key == pygame.K_DOWN:
+                #First time up key is used
+                if last_key_loc == ():
+                    available_spot = not any((get_range(mouse[0]), get_range(mouse[1])) in x for x in used_locations)
+
+                    if available_spot:
+                        #Highlight available spot 
+                        pygame.draw.rect(screen,(255, 204, 255), pygame.Rect(get_range(mouse[0])+3, get_range(mouse[1])+3, 56, 56))
+                    
+                    #Update last key loc
+                    last_key_loc = (mouse[0], mouse[1])
+                
+                else:
+                    if last_key_loc[1] != 480:
+                        available_spot = not any((get_range(last_key_loc[0]), get_range(last_key_loc[1])+60) in x for x in used_locations)
+
+                        #Spot is available, remove last highlighted spot and advance 
+                        if available_spot:
+                            if not any((get_range(last_key_loc[0]), get_range(last_key_loc[1])) in x for x in used_locations):
+                                pygame.draw.rect(screen,(255, 255, 255), pygame.Rect(get_range(last_key_loc[0])+3, get_range(last_key_loc[1])+3, 56, 56))                           
+                            pygame.draw.rect(screen,(255, 204, 255), pygame.Rect(get_range(last_key_loc[0])+3, (get_range(last_key_loc[1])+60)+3, 56, 56))
+
+                        #spot is unavailable, remove last highted spot and advance but do not hightlight
+                        else:
+                            if not any((get_range(last_key_loc[0]), get_range(last_key_loc[1])) in x for x in used_locations) and not get_range(last_key_loc[1])+60 >=480:
+                                pygame.draw.rect(screen,(255, 255, 255), pygame.Rect(get_range(last_key_loc[0])+3, get_range(last_key_loc[1])+3, 56, 56))
+
+                        if get_range(last_key_loc[1])+60 > 480:
+                            last_key_loc = (get_range(last_key_loc[0]), 480)
+                        else:
+                            last_key_loc = (get_range(last_key_loc[0]), get_range(last_key_loc[1])+60)
+                
+            #and grid[int((get_range(last_key_loc[1]))/60)][int((get_range(last_key_loc[0]))/60)] == grid_copy[int((get_range(last_key_loc[1]))/60)][int((get_range(last_key_loc[0]))/60)]
+            if event.key == pygame.K_LEFT:
+               #First time up key is used
+                if last_key_loc == ():
+                    available_spot = not any((get_range(mouse[0]), get_range(mouse[1])) in x for x in used_locations)
+
+                    if available_spot:
+                        #Highlight available spot 
+                        pygame.draw.rect(screen,(255, 204, 255), pygame.Rect(get_range(mouse[0])+3, get_range(mouse[1])+3, 56, 56))
+                    
+                    #Update last key loc
+                    last_key_loc = (mouse[0], mouse[1])
+                
+                else:
+                    if last_key_loc[0] != 0:
+                        available_spot = not any((get_range(last_key_loc[0])-60, get_range(last_key_loc[1])) in x for x in used_locations)
+
+                        #Spot is available, remove last highlighted spot and advance 
+                        if available_spot:
+                            if not any((get_range(last_key_loc[0]), get_range(last_key_loc[1])) in x for x in used_locations):
+                                pygame.draw.rect(screen,(255, 255, 255), pygame.Rect(get_range(last_key_loc[0])+3, get_range(last_key_loc[1])+3, 56, 56))                           
+                            pygame.draw.rect(screen,(255, 204, 255), pygame.Rect((get_range(last_key_loc[0])-60)+3, (get_range(last_key_loc[1]))+3, 56, 56))
+
+                        #spot is unavailable, remove last highted spot and advance but do not hightlight
+                        else:
+                            if not any((get_range(last_key_loc[0]), get_range(last_key_loc[1])) in x for x in used_locations) and not get_range(last_key_loc[0])-60 <=0:
+                                pygame.draw.rect(screen,(255, 255, 255), pygame.Rect(get_range(last_key_loc[0])+3, get_range(last_key_loc[1])+3, 56, 56))
+
+                        if get_range(last_key_loc[0])-60 < 0:
+                            last_key_loc = (0, get_range(last_key_loc[1]))
+                        else:
+                            last_key_loc = (get_range(last_key_loc[0])-60, get_range(last_key_loc[1]))
+
+            if event.key == pygame.K_RIGHT:
+                #First time up key is used
+                if last_key_loc == ():
+                    available_spot = not any((get_range(mouse[0]), get_range(mouse[1])) in x for x in used_locations)
+
+                    if available_spot:
+                        #Highlight available spot 
+                        pygame.draw.rect(screen,(255, 204, 255), pygame.Rect(get_range(mouse[0])+3, get_range(mouse[1])+3, 56, 56))
+                    
+                    #Update last key loc
+                    last_key_loc = (mouse[0], mouse[1])
+                
+                else:
+                    if last_key_loc[0] != 480:
+                        available_spot = not any((get_range(last_key_loc[0])+60, get_range(last_key_loc[1])) in x for x in used_locations)
+
+                        #Spot is available, remove last highlighted spot and advance 
+                        if available_spot:
+                            if not any((get_range(last_key_loc[0]), get_range(last_key_loc[1])) in x for x in used_locations):
+                                pygame.draw.rect(screen,(255, 255, 255), pygame.Rect(get_range(last_key_loc[0])+3, get_range(last_key_loc[1])+3, 56, 56))                           
+                            pygame.draw.rect(screen,(255, 204, 255), pygame.Rect((get_range(last_key_loc[0])+60)+3, (get_range(last_key_loc[1]))+3, 56, 56))
+
+                        #spot is unavailable, remove last highted spot and advance but do not hightlight
+                        else:
+                            if not any((get_range(last_key_loc[0]), get_range(last_key_loc[1])) in x for x in used_locations) and not get_range(last_key_loc[0])+60 ==480:
+                                pygame.draw.rect(screen,(255, 255, 255), pygame.Rect(get_range(last_key_loc[0])+3, get_range(last_key_loc[1])+3, 56, 56))
+
+                        if get_range(last_key_loc[0])+60 > 480:
+                            last_key_loc = (480, get_range(last_key_loc[1]))
+                        else:
+                            last_key_loc = (get_range(last_key_loc[0])+60, get_range(last_key_loc[1]))
+                
     #Getting mouse position
     mouse = pygame.mouse.get_pos()
 
