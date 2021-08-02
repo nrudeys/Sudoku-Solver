@@ -1,4 +1,5 @@
 import random
+import numpy as np
 
 #Global variables 
 grid_indices = [i for i in range(9)]
@@ -16,12 +17,12 @@ def fill_grid():
     completed_puzzle = fill_nondiagonal(grid)
 
     #Print values
-    print("Complete")
-    print_grid(grid)
+    #print("Complete")
+    #print_grid(grid)
 
     remove_entries(grid)
-    print("Removed")
-    print_grid(grid)
+    #print("Removed")
+    #print_grid(grid)
     return grid
  
 #Helper function to fill rest of grid, using backtracking algo
@@ -66,10 +67,11 @@ def remove_entries(grid):
         
         while k > 64:
             #Avoiding 8 since we don't want a case in which its all 8 makes a loop
-            k = random.randint(4,6)            
+            k = random.randint(4,6)           
         count+=k
-        delete = set(random.sample(range(len(grid[row])), k+1))
+        delete = set(random.sample(range(1,len(grid[row])+1), k))
         grid[row] = [num if num not in delete else 0 for num in grid[row]]
+    
     return grid
 
 #Looking for the next empty cell by checking each cell one by one 
@@ -103,7 +105,6 @@ def num_in_col(grid, num, col):
             return True
     return False
 
-#SQUARE ISN'T WORKING RIGHT FIX FIX FIX
 #Helper function for checking if square portions already contain given num
 def square_has_num(grid, num, grid_row, grid_col):
     #Get the 3x3 rows and cols for the input by using nearest multiple of 3
@@ -146,5 +147,3 @@ def fill_diagonal(grid):
                 num = random.randint(1,9)
         
             grid[row][col] = num
-
-fill_grid()
