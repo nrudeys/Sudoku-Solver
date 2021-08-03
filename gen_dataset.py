@@ -65,13 +65,13 @@ def remove_entries(grid):
         #Selecting k randomly for each row
         k = random.randint(5,8)
         
-        while k > 64:
+        while count + k > 64:
             #Avoiding 8 since we don't want a case in which its all 8 makes a loop
             k = random.randint(4,6)           
         count+=k
         delete = set(random.sample(range(1,len(grid[row])+1), k))
         grid[row] = [num if num not in delete else 0 for num in grid[row]]
-    
+    print(81-count)
     return grid
 
 #Looking for the next empty cell by checking each cell one by one 
