@@ -19,6 +19,7 @@ grid = fill_grid()
 
 #Setting flags
 running = True
+pos = False
 
 #Setting positions for grid
 x = 300
@@ -50,6 +51,9 @@ while running:
         ##ENTERING NUM##
         if event.type == pygame.KEYDOWN:
             input_num = event.unicode
+        
+        if event.type == pygame.MOUSEBUTTONUP:
+            pos = pygame.mouse.get_pos()
     
     #Checking which keys are being pressed (used for holding feature)
     keys_pressed = pygame.key.get_pressed()
@@ -85,6 +89,14 @@ while running:
         if entries[(x,y)] == 0:
             pygame.draw.rect(screen,(255, 204, 255), pygame.Rect(x+3,y+3, 56, 56))
     
+    
+    if pos and entries[get_range(pos[0]), get_range(pos[1])] != True:
+        pygame.draw.rect(screen,(255, 204, 255), pygame.Rect(get_range(pos[0])+3,get_range(pos[1])+3, 56, 56))
+        if entries[(x,y)] !=True:
+            pygame.draw.rect(screen,(255, 255, 255), pygame.Rect(x+3,y+3, 56, 56))
+        x = get_range(pos[0])
+        y = get_range(pos[1])
+    
     #Enter input
     if str(input_num).isnumeric() and int(input_num) >= 1 and int(input_num) <= 9 and entries[(x,y)] != True:
             #Spot is used (need to re-highlight) or is initial spot
@@ -97,6 +109,7 @@ while running:
             
             #Reset
             input_num = 0
+    pos = False
     
     #Display
     pygame.display.flip()
