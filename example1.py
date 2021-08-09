@@ -3,7 +3,7 @@ import pygame
 import sys
 
 #Setting clock
-fps=5
+fps=4
 fpsclock=pygame.time.Clock()
 
 #Initializing game
@@ -37,10 +37,8 @@ arr = [(x*60,y*60) for x in range(0,9) for y in range(0,9)]
 entries = dict.fromkeys(arr, 0)
 entries = {k: entries[k] if k not in filled_spots else True for k in entries}
 
-print(entries)
-
 #Setting initial pos to -1 so we know that arrows haven't moved yet so we need to add highlight
-entries[(300,300)] = -1
+#entries[(300,300)] = -1
 
 while running:
     for event in pygame.event.get():
@@ -76,21 +74,21 @@ while running:
     if keys_pressed[pygame.K_UP]:
         if entries[(x,y)] == 0:
             pygame.draw.rect(screen,(255, 255, 255), pygame.Rect(x+3,y+3, 56, 56))
-        y = set_y(y, x, -60, screen)
+        y = set_y(y, x, -60, screen, entries)
         if entries[(x,y)] == 0:
             pygame.draw.rect(screen,(255, 204, 255), pygame.Rect(x+3,y+3, 56, 56))
 
     if keys_pressed[pygame.K_DOWN]:
         if entries[(x,y)] == 0:
             pygame.draw.rect(screen,(255, 255, 255), pygame.Rect(x+3,y+3, 56, 56))
-        y = set_y(y, x, 60, screen)
+        y = set_y(y, x, 60, screen, entries)
         if entries[(x,y)] == 0:
             pygame.draw.rect(screen,(255, 204, 255), pygame.Rect(x+3,y+3, 56, 56))
-
+    
     #Enter input
     if str(input_num).isnumeric() and int(input_num) >= 1 and int(input_num) <= 9 and entries[(x,y)] != True:
             #Spot is used (need to re-highlight) or is initial spot
-            if entries[(x,y)] != 0 or entries[(x,y)] == -1:
+            if (entries[(x,y)] != 0):
                 pygame.draw.rect(screen,(255, 204, 255), pygame.Rect(x+3,y+3, 56, 56))
             
             #Update entry for pos and display
@@ -104,6 +102,3 @@ while running:
     pygame.display.flip()
     fpsclock.tick(fps) 
 pygame.quit()
-
-#Add fill in board then go from there, add edges cases for that
-#Replace old code w this, this is beautiful
