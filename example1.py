@@ -34,7 +34,7 @@ num_font = pygame.font.SysFont('Monotype', 20, bold=True)
 filled_spots = fill_board(None, grid, screen, num_font, (0,0,0))
 
 #Empty dict to keep track of squares and their nums
-arr = [(x*60,y*60) for x in range(0,9) for y in range(0,9)]
+arr = [(y*60,x*60) for x in range(0,9) for y in range(0,9)]
 entries = dict.fromkeys(arr, 0)
 entries = {k: entries[k] if k not in filled_spots else True for k in entries}
 
@@ -92,15 +92,23 @@ while running:
     
     if pos and entries[get_range(pos[0]), get_range(pos[1])] != True:
         pygame.draw.rect(screen,(255, 204, 255), pygame.Rect(get_range(pos[0])+3,get_range(pos[1])+3, 56, 56))
-        if entries[(x,y)] !=True:
+
+        if entries[(x,y)] == 0 and not ((get_range(pos[0]), get_range(pos[1])) == (x,y)):
             pygame.draw.rect(screen,(255, 255, 255), pygame.Rect(x+3,y+3, 56, 56))
+
         x = get_range(pos[0])
         y = get_range(pos[1])
+                
+        if entries[(x,y)] != 0:
+            screen.blit(num_font.render(entries[(x,y)] , True , (255,0,0)), (25+x, 25+y))
     
     #Enter input
     if str(input_num).isnumeric() and int(input_num) >= 1 and int(input_num) <= 9 and entries[(x,y)] != True:
-            #Spot is used (need to re-highlight) or is initial spot
-            if (entries[(x,y)] != 0):
+            curr_pos = pygame.mouse.get_pos()
+
+            #Spot is used (need to re-highlight)
+    
+            if (entries[(x,y)] != 0) or ((get_range(curr_pos[0]), get_range(curr_pos[1])) == (x,y)):
                 pygame.draw.rect(screen,(255, 204, 255), pygame.Rect(x+3,y+3, 56, 56))
             
             #Update entry for pos and display
