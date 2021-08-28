@@ -5,12 +5,22 @@ RULES: Enter a number from 1 to 9 in each of the cells
        and square boxes contain each of these number 
        with no repeats
 
-CONTROLS: 1) NEW GAME: start a new game
-        
-          2) GENERATE SOLUTION: generating a solution 
-             for given puzzle
+CONTROLS: 1) Mouse click or UP, DOWN, LEFT, RIGHT arrow
+             key to move 
+            
+          2) DELETE key to clear board
 
-          3) VERIFY SOLUTION: enter a solution and
-             check if it is valid
+          3) BACKSPACE key to remove an entry
 
-          4) BACK: return to home screen
+          4) Music keys: -F to forward
+                         -B to back 
+                         -P to pause/play
+             <TAKE OUT LATER -- JUST FOR YOU RN PAL
+               ...and fun mode>
+Press start to begin a new game or press enter to check
+your own board
+
+            
+              
+
+          
