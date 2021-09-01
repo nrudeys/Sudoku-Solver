@@ -1234,3 +1234,14 @@ if os.path.exists("curr_grid_enter.png"):
     os.remove("curr_grid_enter.png")
 
 pygame.quit()
+
+
+#clean up code (STYLE)
+#figure out dll load import numpy pyinstaller 
+#sort music into folders
+#create test files
+#push into github and done
+
+
+#------------
+#enter board should be an input, then has a solve button instead 
