@@ -36,16 +36,16 @@ game_started = info = generate_sol = blurred = back = back_enter = pos = \
 
 entries_ent = dict.fromkeys([k for k in gh.get_cell_indices()], 0)
 
-invalid_spots = invalid_spots_ent = {}
+invalid = invalid_spots_ent = {}
 sol_ent = []
 
-#colors
+# Colors
 RED = (255, 0, 0)
 VIOLET = (255, 204, 255)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GRAY = (192, 192, 192)
-YELLOW = (255, 255, 204)
+PINK = (255, 204, 204)
 
 game_setup.home_screen(screen, py.mouse.get_pos(), text_font)
 
@@ -57,7 +57,6 @@ x = y = x1 = y1 = 300
 
 while running:
     for event in py.event.get():
-        
         if event.type == py.QUIT:
             # Exiting game
             running = False
@@ -75,6 +74,19 @@ while running:
                             # Load previous Sudoku puzzle 
                             img = py.image.load("curr_grid.png")
                             screen.blit(img, (0, 0))
+
+                            for k in invalid.keys():
+                                val = str(invalid[k])
+                                rect = py.Rect(k[0] + 3, k[1] + 3, 56, 56)
+
+                                if assist:
+                                    py.draw.rect(screen, PINK, rect)
+                                else:
+                                    py.draw.rect(screen, VIOLET, rect)
+
+                                num = num_font.render(val, True, RED)
+                                
+                                screen.blit(num, (25 + k[0], 25 + k[1]))
                         else:
                             # A mode was selected
                             if easy:
@@ -87,32 +99,15 @@ while running:
                             if easy or medium or hard:
                                 game_setup.create_empty_board(screen)
 
-                                used_spots = game_setup.insert_values(screen, grid)
+                                given_clues = game_setup.insert_values(screen, grid)
                                 
-                                sol = solve_data.solve_puzzle(np.copy(grid))
-                                sol_entries, entries = (
-                                    gh.set_ents_dicts(sol, used_spots)
+                                #sol = solve_data.solve_puzzle(np.copy(grid))
+                                entries = (
+                                    gh.set_ents_dicts(given_clues)
                                 )
 
                                 x = y = 300
-                            else:
-                                # Default mode, check if assist mode switched
-                                img = py.image.load("curr_grid.png")
-                                screen.blit(img, (0, 0))
-    
-                                for k in invalid_spots_ent.keys():
-                                    val = str(invalid_spots_ent[k])
-                                    rect = py.Rect(k[0] + 3, k[1] + 3, 56, 56)
-
-                                    if assist:
-                                        py.draw.rect(screen, YELLOW, rect)
-                                    else:
-                                        py.draw.rect(screen, VIOLET, rect)
-
-                                    num = num_font.render(val, True, RED)
-                                    
-                                    screen.blit(num, (25 + k[0], 25 + k[1]))
-                                
+                       
                             game_started = True
                             info = blurred = back = back_enter = pos = enter_board = False                    
                             input_num = 0   
@@ -136,13 +131,13 @@ while running:
 
                         game_setup.create_empty_board(screen)
 
-                        used_spots = game_setup.insert_values(screen, grid)   
+                        given_clues = game_setup.insert_values(screen, grid)   
 
-                        sol = solve_data.solve_puzzle(np.copy(grid))
-                        sol_entries, entries = (
-                                    gh.set_ents_dicts(sol, used_spots)
+                        #sol = solve_data.solve_puzzle(np.copy(grid))
+                        entries = (
+                                    gh.set_ents_dicts(given_clues)
                                 )
-                        invalid_spots = {}
+                        invalid = {}
 
                         x = y = 300
                     
@@ -170,7 +165,7 @@ while running:
                             rect = py.Rect(k[0] + 3, k[1] + 3, 56, 56)
 
                             if assist:
-                                py.draw.rect(screen, YELLOW, rect)
+                                py.draw.rect(screen, PINK, rect)
                             else:
                                 py.draw.rect(screen, VIOLET, rect)
 
@@ -206,30 +201,32 @@ while running:
                     elif hard or default == modes.Mode.HARD: 
                         grid = gen_data.gen_puzzle(6, 8, 6, 7, 64)
  
-                    sol = solve_data.solve_puzzle(np.copy(grid))
-                    used_spots = game_setup.insert_values(screen, grid)
-                    sol_entries, entries = gh.set_ents_dicts(sol, used_spots)
+                    given_clues = game_setup.insert_values(screen, grid)
+                    entries = gh.set_ents_dicts(given_clues)
 
                     generate_sol = blurred = False
-                    invalid_spots = {}
+                    invalid = {}
 
                     x = y = 300
                     input_num = 0
                 elif curr_pos[0] >= 160 and curr_pos[0] <= 260:   
                     # Generate solution button clicked
+                    sol = solve_data.solve_puzzle(np.copy(grid))
 
                     game_setup.create_empty_board(screen)
+                    
                     game_setup.insert_values(screen, grid, sol)
-                    entries = {k: sol_entries[k] for k in entries}
+                    entries = {(x, y): sol[(y // 60, x // 60)] if (x, y) not in given_clues 
+                        else True for x, y in entries}
 
                     generate_sol = True
                 elif curr_pos[0] >= 290 and curr_pos[0] <= 390:
                     # Verify button clicked
 
-                    grid_vals = gh.get_curr_grid_vals(entries, used_spots,
-                                    sol)
-
-                    if gen_data.verify_validness(grid_vals):
+                    grid_vals = gh.get_curr_grid_vals(entries, given_clues,
+                                    grid)
+                    
+                    if gen_data.verify.verify_validness(grid_vals):
                         valid_sol = True
                     else:
                         valid_sol = False
@@ -270,8 +267,7 @@ while running:
             elif curr_pos[1] >= 550 and curr_pos[1] <= 590 and enter_board: 
                 # Solved button clicked
                 if curr_pos[0] >= 220 and curr_pos[0] <= 320:
-                    grid_vals = game_setup.get_curr_grid_vals(entries_ent, 
-                                    used_spots, sol)
+                    grid_vals = game_setup.get_curr_grid_vals(entries_ent)
                     
                     sol_ent = []
                     error_occur = False
@@ -355,602 +351,528 @@ while running:
                     assist = False      
         elif event.type == py.KEYDOWN:
             # Key is pressed down 
-            if game_started and str(entries[(x,y)]).isnumeric():
+            if (game_started and str(entries[(x, y)]).isnumeric() or enter_board):
                 input_num = event.unicode
-            elif enter_board and str(entries_ent[(x,y)]).isnumeric():
-                input_num = event.unicode
-
             
             # Backspace key was pressed down
             if event.key == py.K_BACKSPACE:
                 if assist:
-                    #get prev entry
+                    # Get current entry
                     prev = entries[(x,y)]
-
 
                 if game_started:
                     if str(entries[(x,y)]).isnumeric():
-                        #used to erase but think u could prob remove and just re-order
-                        py.draw.rect(screen,(255, 255, 255), py.Rect(x+3,y+3, 56, 56))
+                        py.draw.rect(screen, VIOLET, 
+                            py.Rect(x + 3, y + 3, 56, 56))
                         entries[(x,y)] = 0
-                        py.draw.rect(screen,(255, 204, 255), py.Rect(x+3,y+3, 56, 56))
 
                         if assist:      
-                            vals = [[grid[col][row] if grid[col][row] != 0 else entries[(row*60, col*60)] for row in range(9)] for col in range(9)]
-                            np_grid = np.array(vals) 
-                            sq_x_init = 3*round((int(x/60)-1)/3)
-                            sq_y_init = 3*round((int(y/60)-1)/3)
-                            square = np_grid[sq_y_init:sq_y_init+3, sq_x_init:sq_x_init+3]
+                            # Assist is on, check if removal removed
+                            # any conflicts
 
-                            col_count = np.count_nonzero(np_grid[:,int(x/60)] == prev)
-                            row_count = np.count_nonzero(np_grid[int(y/60),:] == prev)
-                            sq_count = np.count_nonzero(square == prev)
+                            curr_vals = gh.get_curr_grid_vals(entries, 
+                                given_clues, grid)
 
-                            #COL
+                            col_count, row_count, sq_count = (
+                                gh.count_occurrences(curr_vals, prev, x, y)
+                            )
+
                             if (col_count == 1):
+                                # Column is valid, check row and square
 
-                                ind = np.where((np_grid[:,int(x/60)]) == prev)
+                                idx = np.where(curr_vals[:,x // 60] == prev)
+                                idx = idx[0][0]
 
-                                if str(entries[x,(ind[0][0]*60)]).isnumeric():
-                                    t = np_grid[3*round((int(x/60)-1)/3):(3*round((int(x/60)-1)/3)+3), 3*round((ind[0][0]-1)/3):3*round((ind[0][0]-1)/3)+3]
 
-                                    if (not np.count_nonzero(np_grid[ind[0][0],:] == prev) > 1 and 
-                                        not np.count_nonzero(t == prev) > 1) and (y != ind[0][0]*60): 
-                                        if (x,(ind[0][0]*60)) in invalid_spots.keys():
-                                            del invalid_spots[(x,(ind[0][0]*60))] 
+                                if str(entries[x, idx]).isnumeric():
+                                    sq = gh.get_square(curr_vals, x, idx)
+                                    
+                                    if (not np.count_nonzero(curr_vals[idx,:]
+                                        == prev) > 1 and not 
+                                        np.count_nonzero(sq == prev) > 1 and 
+                                        (y != idx * 60)): 
+
+                                        if (x, idx * 60) in invalid.keys():
+                                            del invalid[(x, idx * 60)] 
                                         if generate_sol:
-                                            py.draw.rect(screen,(255, 255, 255), py.Rect(x+3,y+3, 56, 56))
+                                            py.draw.rect(screen, WHITE, 
+                                                py.Rect(x + 3, y + 3, 56, 56))
                                         else:
-                                            py.draw.rect(screen,(255, 204, 255), py.Rect(x+3,(ind[0][0]*60)+3, 56, 56))
-                                        screen.blit(num_font.render(str(entries[x, (ind[0][0]*60)]) , True , (255,0,0)), (25+x, 25+((ind[0][0]*60))))
+                                            py.draw.rect(screen, VIOLET, 
+                                                py.Rect(x + 3, (idx * 60) + 3,
+                                                56, 56))
+                                        screen.blit(num_font.render(
+                                            str(entries[x, (idx * 60)]), True,
+                                            RED), (25 + x, 25 + (idx * 60)))
                             #ROW
                             if (row_count == 1):
-                                ind = np.where((np_grid[int(y/60),:]) == prev)
+                                idx = np.where((curr_vals[y // 60,:]) == prev)
+                                idx = idx[0][0]
 
-                                if str(entries[(ind[0][0]*60),y]).isnumeric():
-                                
-                                    t = np_grid[3*round((ind[0][0]-1)/3):3*round((ind[0][0]-1)/3)+3, 3*round((int(y/60)-1)/3):(3*round((int(y/60)-1)/3)+3)]
+                                if str(entries[(idx * 60), y]).isnumeric():
+                                    sq = gh.get_square(curr_vals, idx, y)
                                     
-                                    if (not np.count_nonzero(np_grid[:,ind[0][0]] == prev) > 1 and 
-                                        not np.count_nonzero(t == prev) > 1) and (x != ind[0][0]*60):
-                                        if ((ind[0][0]*60),y) in invalid_spots.keys():
-                                            del invalid_spots[((ind[0][0]*60),y)]  
+                                    if ((not np.count_nonzero(curr_vals[:,idx] 
+                                        == prev) > 1 and not 
+                                        np.count_nonzero(sq == prev) > 1) and
+                                        (x != idx * 60)):
+
+                                        if ((idx * 60), y) in invalid.keys():
+                                            del invalid[(idx * 60, y)]  
                                         if generate_sol:
-                                            py.draw.rect(screen,(255, 255, 255), py.Rect(x+3,y+3, 56, 56))
+                                            py.draw.rect(screen, WHITE, 
+                                                py.Rect(x + 3, y + 3, 56, 56))
                                         else:
-                                            py.draw.rect(screen,(255, 204, 255), py.Rect((ind[0][0]*60)+3,y+3, 56, 56))
-                                        screen.blit(num_font.render(str(entries[(ind[0][0]*60), y]) , True , (255,0,0)), (25+(ind[0][0]*60), 25+y))
+                                            py.draw.rect(screen, VIOLET, 
+                                                py.Rect((idx * 60) + 3, y + 3,
+                                                56, 56))
+                                        screen.blit(num_font.render(
+                                            str(entries[(idx * 60), y]), True,
+                                            RED), (25 + (idx * 60), 25 + y))
                         
-                        if (x,y) in invalid_spots.keys():
-                            del invalid_spots[(x,y)]
+                        if (x, y) in invalid.keys():
+                            del invalid[(x, y)]
 
                 elif enter_board:
-                        if str(entries_ent[(x1,y1)]).isnumeric():
-                            py.draw.rect(screen,(255, 255, 255), py.Rect(x1+3,y1+3, 56, 56))
-                            entries_ent[(x1,y1)] = 0
-                            py.draw.rect(screen,(255, 204, 255), py.Rect(x1+3,y1+3, 56, 56))
+                    if str(entries_ent[(x1, y1)]).isnumeric():
+                        py.draw.rect(screen, WHITE, py.Rect(x1 + 3, y1 + 3, 
+                            56, 56))
+                        
+                        entries_ent[(x1, y1)] = 0
 
-                        if (x1,y1) in invalid_spots_ent.keys():
-                            del invalid_spots_ent[(x1,y1)]
+                        py.draw.rect(screen, VIOLET, py.Rect(x1 + 3, y1 + 3,
+                            56, 56))
+
+                    if (x1, y1) in invalid_spots_ent.keys():
+                        del invalid_spots_ent[(x1, y1)]
 
             # Delete key was pressed down
             if event.key == py.K_DELETE:
                 game_setup.create_empty_board(screen)
-                entries = dict.fromkeys([(y*60,x*60) for x in range(0,9) for y in range(0,9)], 0)
+
+                indices = [key for key in gh.get_cell_indices()]
+                entries = entries_ent = dict.fromkeys(indices, 0)
+
+                invalid = invalid_spots_ent = {}
     
                 if not enter_board:
-                    entries = {k: entries[k] if k not in used_spots else True for k in entries}
+                    entries = {k: entries[k] if k not in given_clues else True 
+                        for k in entries}
+
                     generate_sol = blurred = False
-                    invalid_spots = {}
                 else:
-                    sol_ent = []
                     grid = np.reshape(list(entries.values()), (9, 9))
-                    entries_ent = dict.fromkeys([(y*60,x*60) for x in range(0,9) for y in range(0,9)], 0)
+                    sol_ent = []
 
-                    invalid_spots_ent = {}
-                game_setup.insert_values(screen, grid)
-   
-    ##EMPTY BOARD FOR INPUT
-    if enter_board:
-        mouse = py.mouse.get_pos()
-        if mouse[1] >= 550 and mouse[1] <= 590:
-            if mouse[0] >= 220 and mouse[0] <= 320:
-                py.draw.rect(screen, (255,204,255), py.Rect(220, 550, 100, 40))
-                py.draw.rect(screen, (0, 0, 0), py.Rect(220, 550, 100, 40), 3)
+                game_setup.insert_values(screen, grid)        
 
-                py.draw.rect(screen, (192,192,192), py.Rect(420, 550, 100, 40))
-                py.draw.rect(screen, (0, 0, 0), py.Rect(420, 550, 100, 40), 3)
-            elif mouse[0] >= 420 and mouse[0] <= 520:
-                py.draw.rect(screen, (192,192,192), py.Rect(220, 550, 100, 40))
-                py.draw.rect(screen, (0, 0, 0), py.Rect(220, 550, 100, 40), 3)
-
-                py.draw.rect(screen, (255,204,255), py.Rect(420, 550, 100, 40))
-                py.draw.rect(screen, (0, 0, 0), py.Rect(420, 550, 100, 40), 3)
-            else:
-                py.draw.rect(screen, (192,192,192), py.Rect(220, 550, 100, 40))
-                py.draw.rect(screen, (0, 0, 0), py.Rect(220, 550, 100, 40), 3)
-
-                py.draw.rect(screen, (192,192,192), py.Rect(420, 550, 100, 40))
-                py.draw.rect(screen, (0, 0, 0), py.Rect(420, 550, 100, 40), 3)
-        else:
-            py.draw.rect(screen, (192,192,192), py.Rect(220, 550, 100, 40))
-            py.draw.rect(screen, (0, 0, 0), py.Rect(220, 550, 100, 40), 3)
-
-            py.draw.rect(screen, (192,192,192), py.Rect(420, 550, 100, 40))
-            py.draw.rect(screen, (0, 0, 0), py.Rect(420, 550, 100, 40), 3)
-
-        screen.blit(py.font.SysFont('Monotype', 15).render('Solve' , True , (0,0,0)) , (245, 560))
-        screen.blit(py.font.SysFont('Monotype', 15).render('Back' , True , (0,0,0)) , (450, 560))
-
-    ##CHECKING FOR BUTTON EVENTS
     if game_started:
-        #Get highlight feature to work without making buttons everytime
-        game_setup.game_screen(screen, py.mouse.get_pos())  
+        game_setup.game_screen(screen, curr_pos)  
 
-         #Checking which keys are being pressed (used for holding feature)
         keys_pressed = py.key.get_pressed()
-
+        
         if keys_pressed[py.K_LEFT]:
             if not generate_sol:
-                #Erase previous empty square
-                if entries[(x,y)] == 0 or not str(entries[(x,y)]).isnumeric():
-                    py.draw.rect(screen,(255, 255, 255), py.Rect(x+3,y+3, 56, 56)) 
-
-                    if not str(entries[(x,y)]).isnumeric():
-                        screen.blit(num_font.render(str(grid[x//60][y//60]), True , (0,0,0)), (25+x, 25+y))
+                gh.advance(screen, (x, y, WHITE), grid, entries)
                 
-                #Advance in given dir
                 x = gh.set_num(x, -60)
-                #Highlight new pos
-                if entries[(x,y)] == 0 or not str(entries[(x,y)]).isnumeric():
-                    py.draw.rect(screen,(255, 204, 255), py.Rect(x+3,y+3, 56, 56))
-                    if not str(entries[(x,y)]).isnumeric():
-                        screen.blit(num_font.render(str(grid[x//60][y//60]), True , (0,0,0)), (25+x, 25+y))
+                
+                gh.advance(screen, (x, y, VIOLET), grid, entries)
             elif not blurred:
-                if entries[(x,y)] == 0 or not str(entries[(x,y)]).isnumeric():
-                    py.draw.rect(screen,(255, 255, 255), py.Rect(x+3,y+3, 56, 56)) 
+                # Generate solution clicked and screen is not blurred
 
-                    if not str(entries[(x,y)]).isnumeric():
-                        screen.blit(num_font.render(str(grid[x//60][y//60]), True , (0,0,0)), (25+x, 25+y))
-
-                if str(entries[(x,y)]).isnumeric() and entries[(x,y)] == sol_entries[(x,y)]:
-                    py.draw.rect(screen,(255, 255, 255), py.Rect(x+3,y+3, 56, 56))
-                    screen.blit(num_font.render(str(entries[(x,y)]), True , (255,0,0)), (25+x, 25+y))
+                gh.filled_board_advance(screen, (x, y, WHITE),
+                     (grid, sol), entries)
                 
                 x = gh.set_num(x, -60)
 
-                if entries[(x,y)] == 0 or not str(entries[(x,y)]).isnumeric():
-                    py.draw.rect(screen,(255, 204, 255), py.Rect(x+3,y+3, 56, 56)) 
-
-                    if not str(entries[(x,y)]).isnumeric():
-                        screen.blit(num_font.render(str(grid[x//60][y//60]), True , (0,0,0)), (25+x, 25+y))
-                
-                if str(sol_entries[(x,y)]).isnumeric() and entries[(x,y)] == sol_entries[(x,y)]:
-                    py.draw.rect(screen,(255, 204, 255), py.Rect(x+3,y+3, 56, 56))
-
+                gh.filled_board_advance(screen, (x, y, VIOLET),
+                     (grid, sol), entries)
+                                    
         if keys_pressed[py.K_RIGHT]:
             if not generate_sol:
-                if entries[(x,y)] == 0 or not str(entries[(x,y)]).isnumeric():
-                    py.draw.rect(screen,(255, 255, 255), py.Rect(x+3,y+3, 56, 56))
-
-                    if not str(entries[(x,y)]).isnumeric():
-                        screen.blit(num_font.render(str(grid[x//60][y//60]), True , (0,0,0)), (25+x, 25+y))
+                gh.advance(screen, (x, y, WHITE), grid, entries)
                 
                 x = gh.set_num(x, 60)
                 
-                if entries[(x,y)] == 0 or not str(entries[(x,y)]).isnumeric():
-                    py.draw.rect(screen,(255, 204, 255), py.Rect(x+3,y+3, 56, 56))
-                    if not str(entries[(x,y)]).isnumeric():
-                        screen.blit(num_font.render(str(grid[x//60][y//60]), True , (0,0,0)), (25+x, 25+y))
+                gh.advance(screen, (x, y, VIOLET), grid, entries) 
             elif not blurred:
-                if entries[(x,y)] == 0 or not str(entries[(x,y)]).isnumeric():
-                    py.draw.rect(screen,(255, 255, 255), py.Rect(x+3,y+3, 56, 56)) 
-
-                    if not str(entries[(x,y)]).isnumeric():
-                        screen.blit(num_font.render(str(grid[x//60][y//60]), True , (0,0,0)), (25+x, 25+y))
-
-                if str(entries[(x,y)]).isnumeric() and entries[(x,y)] == sol_entries[(x,y)]:
-                    py.draw.rect(screen,(255, 255, 255), py.Rect(x+3,y+3, 56, 56))
-                    screen.blit(num_font.render(str(entries[(x,y)]), True , (255,0,0)), (25+x, 25+y))
+                gh.filled_board_advance(screen, (x, y, WHITE),
+                     (grid, sol), entries)
                 
                 x = gh.set_num(x, 60)
 
-                if entries[(x,y)] == 0 or not str(entries[(x,y)]).isnumeric():
-                    py.draw.rect(screen,(255, 204, 255), py.Rect(x+3,y+3, 56, 56)) 
-
-                    if not str(entries[(x,y)]).isnumeric():
-                        screen.blit(num_font.render(str(grid[x//60][y//60]), True , (0,0,0)), (25+x, 25+y))
-                
-                if str(sol_entries[(x,y)]).isnumeric() and entries[(x,y)] == sol_entries[(x,y)]:
-                    py.draw.rect(screen,(255, 204, 255), py.Rect(x+3,y+3, 56, 56))
+                gh.filled_board_advance(screen, (x, y, VIOLET),
+                     (grid, sol), entries)
 
         if keys_pressed[py.K_UP]:
             if not generate_sol:
-                if entries[(x,y)] == 0 or not str(entries[(x,y)]).isnumeric():
-                    py.draw.rect(screen,(255, 255, 255), py.Rect(x+3,y+3, 56, 56))
-                    if not str(entries[(x,y)]).isnumeric():
-                        screen.blit(num_font.render(str(grid[x//60][y//60]), True , (0,0,0)), (25+x, 25+y))
-                
+                gh.advance(screen, (x, y, WHITE), grid, entries)
+                    
                 y = gh.set_num(y, -60)
                 
-                if entries[(x,y)] == 0 or not str(entries[(x,y)]).isnumeric():
-                    py.draw.rect(screen,(255, 204, 255), py.Rect(x+3,y+3, 56, 56))
-                    if not str(entries[(x,y)]).isnumeric():
-                        screen.blit(num_font.render(str(grid[x//60][y//60]), True , (0,0,0)), (25+x, 25+y))
+                gh.advance(screen, (x, y, VIOLET), grid, entries) 
             elif not blurred:
-                if entries[(x,y)] == 0 or not str(entries[(x,y)]).isnumeric():
-                    py.draw.rect(screen,(255, 255, 255), py.Rect(x+3,y+3, 56, 56)) 
-
-                    if not str(entries[(x,y)]).isnumeric():
-                        screen.blit(num_font.render(str(grid[x//60][y//60]), True , (0,0,0)), (25+x, 25+y))
-
-                if str(entries[(x,y)]).isnumeric() and entries[(x,y)] == sol_entries[(x,y)]:
-                    py.draw.rect(screen,(255, 255, 255), py.Rect(x+3,y+3, 56, 56))
-                    screen.blit(num_font.render(str(entries[(x,y)]), True , (255,0,0)), (25+x, 25+y))
-               
+                gh.filled_board_advance(screen, (x, y, WHITE),
+                     (grid, sol), entries)
+                
                 y = gh.set_num(y, -60)
 
-                if entries[(x,y)] == 0 or not str(entries[(x,y)]).isnumeric():
-                    py.draw.rect(screen,(255, 204, 255), py.Rect(x+3,y+3, 56, 56)) 
 
-                    if not str(entries[(x,y)]).isnumeric():
-                        screen.blit(num_font.render(str(grid[x//60][y//60]), True , (0,0,0)), (25+x, 25+y))
-                
-                if str(sol_entries[(x,y)]).isnumeric() and entries[(x,y)] == sol_entries[(x,y)]:
-                    py.draw.rect(screen,(255, 204, 255), py.Rect(x+3,y+3, 56, 56))
+                gh.filled_board_advance(screen, (x, y, VIOLET),
+                     (grid, sol), entries)
 
         if keys_pressed[py.K_DOWN]:
             if not generate_sol:
-                if entries[(x,y)] == 0 or not str(entries[(x,y)]).isnumeric():
-                    py.draw.rect(screen,(255, 255, 255), py.Rect(x+3,y+3, 56, 56))
-                    if not str(entries[(x,y)]).isnumeric():
-                        screen.blit(num_font.render(str(grid[x//60][y//60]), True , (0,0,0)), (25+x, 25+y))
-                y = gh.set_num(y, 60)
+                gh.advance(screen, (x, y, WHITE), grid, entries)
                 
-                if entries[(x,y)] == 0 or not str(entries[(x,y)]).isnumeric():
-                    py.draw.rect(screen,(255, 204, 255), py.Rect(x+3,y+3, 56, 56))
-                    if not str(entries[(x,y)]).isnumeric():
-                        screen.blit(num_font.render(str(grid[x//60][y//60]), True , (0,0,0)), (25+x, 25+y))
+                y = gh.set_num(y, 60)
+            
+                gh.advance(screen, (x, y, VIOLET), grid, entries)
             elif not blurred:
-                if entries[(x,y)] == 0 or not str(entries[(x,y)]).isnumeric():
-                    py.draw.rect(screen,(255, 255, 255), py.Rect(x+3,y+3, 56, 56)) 
-
-                    if not str(entries[(x,y)]).isnumeric():
-                        screen.blit(num_font.render(str(grid[x//60][y//60]), True , (0,0,0)), (25+x, 25+y))
-
-                if str(entries[(x,y)]).isnumeric() and entries[(x,y)] == sol_entries[(x,y)]:
-                    py.draw.rect(screen,(255, 255, 255), py.Rect(x+3,y+3, 56, 56))
-                    screen.blit(num_font.render(str(entries[(x,y)]), True , (255,0,0)), (25+x, 25+y))
+                gh.filled_board_advance(screen, (x, y, WHITE),
+                     (grid, sol), entries)
                 
                 y = gh.set_num(y, 60)
-                if entries[(x,y)] == 0 or not str(entries[(x,y)]).isnumeric():
-                    py.draw.rect(screen,(255, 204, 255), py.Rect(x+3,y+3, 56, 56)) 
 
-                    if not str(entries[(x,y)]).isnumeric():
-                        screen.blit(num_font.render(str(grid[x//60][y//60]), True , (0,0,0)), (25+x, 25+y))
-                
-                if str(sol_entries[(x,y)]).isnumeric() and entries[(x,y)] == sol_entries[(x,y)]:
-                    py.draw.rect(screen,(255, 204, 255), py.Rect(x+3,y+3, 56, 56))
-    
-        #Click pos
-        if (pos and not(pos[1] >= 550 and pos[1] <= 590)):
-            #and str(entries[gh.round_num(pos[0]), gh.round_num(pos[1])]).isnumeric()):
-            if assist and str(entries[((gh.round_num(pos[0]), gh.round_num(pos[1])))]).isnumeric() and entries[((gh.round_num(pos[0]), gh.round_num(pos[1])))] != 0:
-                vals = [[grid[col][row] if grid[col][row] != 0 else entries[(row*60, col*60)] for row in range(9)] for col in range(9)]
-                sq_x_init = 3*round((int(gh.round_num(pos[0])/60)-1)/3)
-                sq_y_init = 3*round((int(gh.round_num(pos[1])/60)-1)/3)
-                np_grid = np.array(vals) 
-                square = np.reshape(vals, (9, 9))[sq_y_init:sq_y_init+3, sq_x_init:sq_x_init+3]
+                gh.filled_board_advance(screen, (x, y, VIOLET),
+                     (grid, sol), entries)
 
-                num = entries[((gh.round_num(pos[0]), gh.round_num(pos[1])))]
+        if pos and not (pos[1] >= 550 and pos[1] <= 590):
+            # A cell was clicked
+
+            idx =  (gh.round_num(pos[0]), gh.round_num(pos[1]))
+            
+            curr_x = gh.round_num(pos[0])
+            curr_y = gh.round_num(pos[1])
+
+            if assist and str(entries[idx]).isnumeric() and entries[idx] != 0:
+                curr_vals = gh.get_curr_grid_vals(entries, given_clues, grid)
+
+                square = gh.get_square(curr_vals, curr_x, curr_y)
+
+                num = entries[(curr_x, curr_y)]
+
+                (col_count, row_count, sq_count) = (
+                    gh.count_occurrences(curr_vals, num, curr_x, curr_y)
+                )
                 
-                if (np.count_nonzero(np_grid[int(gh.round_num(pos[1])/60),:] == num) > 1 or
-                    np.count_nonzero(np_grid[:,int(gh.round_num(pos[0])/60)] == num) > 1
-                    or np.count_nonzero(square == num) > 1):  
-                        py.draw.rect(screen,(255, 255, 204), py.Rect(gh.round_num(pos[0])+3,gh.round_num(pos[1])+3, 56, 56))
+                if col_count > 1 or row_count > 1 or sq_count > 1:  
+                    py.draw.rect(screen, PINK, py.Rect(curr_x + 3, 
+                        curr_y + 3, 56, 56))
                 else:
-                    py.draw.rect(screen,(255, 204, 255), py.Rect(gh.round_num(pos[0])+3,gh.round_num(pos[1])+3, 56, 56))
+                    py.draw.rect(screen, VIOLET, py.Rect(curr_x + 3, 
+                        curr_y + 3, 56, 56))
             else:    
-                py.draw.rect(screen,(255, 204, 255), py.Rect(gh.round_num(pos[0])+3,gh.round_num(pos[1])+3, 56, 56))
-                if not str(entries[((gh.round_num(pos[0]), gh.round_num(pos[1])))]).isnumeric():
-                    screen.blit(num_font.render(str(grid[gh.round_num(pos[0])//60][gh.round_num(pos[1])//60]), True , (0,0,0)), (25+gh.round_num(pos[0]), 25+gh.round_num(pos[1])))
+                py.draw.rect(screen, VIOLET, py.Rect(curr_x + 3, curr_y + 3,
+                    56, 56))
+                if not str(entries[(curr_x, curr_y)]).isnumeric():
+                    screen.blit(num_font.render(str(grid[(curr_y // 60, curr_x // 60)]), 
+                        True, BLACK), (25 + curr_x, 25 + curr_y))
 
 
-            #Before gen sol 
-            if entries[(x,y)] == 0 or not str(entries[(x,y)]).isnumeric() and not ((gh.round_num(pos[0]), gh.round_num(pos[1])) == (x,y)):
-                py.draw.rect(screen,(255, 255, 255), py.Rect(x+3,y+3, 56, 56))
+            if (entries[(x,y)] == 0 or not str(entries[(x,y)]).isnumeric()):
+                if (x, y) != (curr_x, curr_y):
+                    py.draw.rect(screen, WHITE, py.Rect(x + 3, y + 3, 56, 56))
+                
                 if not str(entries[(x,y)]).isnumeric():
-                    screen.blit(num_font.render(str(grid[x//60][y//60]), True , (0,0,0)), (25+x, 25+y))
-
-            if generate_sol and entries[(x,y)] == sol_entries[(x,y)] and str(entries[(x,y)]).isnumeric():
-                py.draw.rect(screen,(255, 255, 255), py.Rect(x+3,y+3, 56, 56))
-                screen.blit(num_font.render(str(entries[(x,y)]), True , (255,0,0)), (25+x, 25+y))
-
-            (x,y) = (gh.round_num(pos[0]), gh.round_num(pos[1]))
+                    screen.blit(num_font.render(str(grid[(y //60, x // 60)]),
+                        True, BLACK), (25 + x, 25 + y))
             
-            if str(entries[(x,y)]).isnumeric() and entries[(x,y)]!= 0:
-                screen.blit(num_font.render(str(entries[(x,y)]), True , (255,0,0)), (25+x, 25+y))
-
-        #Enter input
-        if str(input_num).isnumeric() and int(input_num) >= 1 and int(input_num) <= 9 and str(entries[(x,y)]).isnumeric():
-                curr_pos = py.mouse.get_pos()
-
-                #del need to re-highlight
-                if sum(x == True for x in entries.values()) == len(used_spots):
-                    py.draw.rect(screen,(255, 204, 255), py.Rect(x+3,y+3, 56, 56))
-
-                #Spot is used (need to re-highlight)
-                if (entries[(x,y)] != 0) or ((gh.round_num(curr_pos[0]), gh.round_num(curr_pos[1])) == (x,y)): 
-                    py.draw.rect(screen,(255, 204, 255), py.Rect(x+3,y+3, 56, 56))
+            #After generating sol, only replace values w/ new entry
+            if (generate_sol and entries[(x,y)] == sol[(y // 60, x // 60)] 
+                and str(entries[(x,y)]).isnumeric()):
+                py.draw.rect(screen, WHITE, py.Rect(x + 3, y + 3, 56, 56))
                 
+                screen.blit(num_font.render(str(entries[(x,y)]), True, RED),
+                    (25 + x, 25 + y))
 
-                #Checking if assist is on
-                if assist:
-                    
-                    #get prev entry
-                    prev = entries[(x,y)]
+            (x,y) = (curr_x, curr_y)
+            
+            if str(entries[(x,y)]).isnumeric() and entries[(x,y)] != 0:
+                screen.blit(num_font.render(str(entries[(x,y)]), True, RED),
+                    (25 + x, 25 + y))
+        
+        if (str(input_num).isnumeric() and int(input_num) >= 1 and 
+            int(input_num) <= 9 and str(entries[(x,y)]).isnumeric()):
+            # Enter input
 
-                    entries[(x,y)] = int(input_num)
-          
-                    vals = [[grid[col][row] if grid[col][row] != 0 else entries[(row*60, col*60)] for row in range(9)] for col in range(9)]
-                    np_grid = np.array(vals) 
-                    sq_x_init = 3*round((int(x/60)-1)/3)
-                    sq_y_init = 3*round((int(y/60)-1)/3)
-                    square = np_grid[sq_y_init:sq_y_init+3, sq_x_init:sq_x_init+3]
+                # Del need to re-highlight
+                if (sum(x == True for x in entries.values()) == 
+                    len(given_clues)):
+                    py.draw.rect(screen, VIOLET, py.Rect(x + 3, 
+                        y + 3, 56, 56))
 
-                    num = int(input_num)
+                # Spot is used (need to re-highlight)
+                if ((gh.round_num(curr_pos[0]), gh.round_num(curr_pos[1])) 
+                    == (x,y) or entries[(x,y)] != 0): 
+                    py.draw.rect(screen, VIOLET, py.Rect(x + 3, y + 3, 
+                        56, 56))
                 
-                    if (np.count_nonzero(np_grid[:,int(x/60)] == num) > 1 or
-                        np.count_nonzero(np_grid[int(y/60),:] == num) > 1
-                        or np.count_nonzero(square == num) > 1):
-                        invalid_spots[(x,y)] = num
-                        py.draw.rect(screen,(255, 255, 204), py.Rect(x+3,y+3, 56, 56))
-                    else:
-                        if (x,y) in invalid_spots.keys():
-                            del invalid_spots[(x,y)] 
-                        if generate_sol:
-                            py.draw.rect(screen,(255, 255, 255), py.Rect(x+3,y+3, 56, 56))
-                        else:
-                            py.draw.rect(screen,(255, 204, 255), py.Rect(x+3,y+3, 56, 56))
-                             
-                    col_count = np.count_nonzero(np_grid[:,int(x/60)] == prev)
-                    row_count = np.count_nonzero(np_grid[int(y/60),:] == prev)
-                    sq_count = np.count_nonzero(square == prev)
-                           
-                    #COL
-                    if (col_count == 1):
-                        ind = np.where((np_grid[:,int(x/60)]) == prev)
+                prev = entries[(x, y)]
+                entries[(x, y)] = num = int(input_num)
+        
+                curr_vals = gh.get_curr_grid_vals(entries, given_clues,
+                    grid)
 
-                        if str(entries[x,(ind[0][0]*60)]).isnumeric() and str(prev).isnumeric() and prev != 0:
-                            t = np_grid[3*round((int(x/60)-1)/3):(3*round((int(x/60)-1)/3)+3), 3*round((ind[0][0]-1)/3):3*round((ind[0][0]-1)/3)+3]
-                       
-                            if (not np.count_nonzero(np_grid[ind[0][0],:] == prev) > 1 and 
-                                not np.count_nonzero(t == prev) > 1) and (y != ind[0][0]*60): 
-                                if (x,(ind[0][0]*60)) in invalid_spots.keys():
-                                    del invalid_spots[(x,(ind[0][0]*60))] 
-                                if generate_sol:
-                                    py.draw.rect(screen,(255, 255, 255), py.Rect(x+3,y+3, 56, 56))
-                                else:
-                                    py.draw.rect(screen,(255, 204, 255), py.Rect(x+3,(ind[0][0]*60)+3, 56, 56))
-                             
-                                screen.blit(num_font.render(str(entries[x, (ind[0][0]*60)]) , True , (255,0,0)), (25+x, 25+((ind[0][0]*60))))
+                square = gh.get_square(curr_vals, x, y)
 
-                    #ROW
-                    if (row_count == 1):
-                        ind = np.where((np_grid[int(y/60),:]) == prev)
+                (col_count, row_count, sq_count) = gh.count_occurrences(
+                    curr_vals, num, x, y
+                )
 
-                        if str(entries[(ind[0][0]*60),y]).isnumeric() and str(prev).isnumeric() and prev != 0:
-                           
-                            t = np_grid[3*round((ind[0][0]-1)/3):3*round((ind[0][0]-1)/3)+3, 3*round((int(y/60)-1)/3):(3*round((int(y/60)-1)/3)+3)]
-               
-                            if (not np.count_nonzero(np_grid[:,ind[0][0]] == prev) > 1 and 
-                                not np.count_nonzero(t == prev) > 1) and (x != ind[0][0]*60):
-                                if ((ind[0][0]*60),y) in invalid_spots.keys():
-                                    del invalid_spots[((ind[0][0]*60),y)]  
-                                if generate_sol:
-                                    py.draw.rect(screen,(255, 255, 255), py.Rect(x+3,y+3, 56, 56))
-                                else:
-                                    py.draw.rect(screen,(255, 204, 255), py.Rect((ind[0][0]*60)+3,y+3, 56, 56))
-                         
-                                screen.blit(num_font.render(str(entries[(ind[0][0]*60), y]) , True , (255,0,0)), (25+(ind[0][0]*60), 25+y))                    
-                
-                    #SQ
-                    if (sq_count == 1):
-                        ind = np.where(square == prev)
-                        
-                        if str(entries[((ind[1][0]+sq_x_init)*60,(ind[0][0]+sq_y_init)*60)]).isnumeric() and str(prev).isnumeric() and prev != 0:
-                            if (not np.count_nonzero(np_grid[:,ind[0][0]+sq_y_init] == prev) > 1 and 
-                                not np.count_nonzero(np_grid[ind[1][0]+sq_x_init,:] == prev) > 1 and 
-                                (x,y) != ((ind[1][0]+sq_x_init)*60, (ind[0][0]+sq_y_init)*60)):
-                                if ((ind[1][0]+sq_x_init)*60,(ind[0][0]+sq_y_init)*60) in invalid_spots.keys():
-                                    del invalid_spots[((ind[1][0]+sq_x_init)*60,(ind[0][0]+sq_y_init)*60)]  
-                                if generate_sol:
-                                    py.draw.rect(screen,(255, 255, 255), py.Rect(x+3,y+3, 56, 56))
-                                else:
-                                    py.draw.rect(screen,(255, 204, 255), py.Rect(((ind[1][0]+sq_x_init)*60)+3,((ind[0][0]+sq_y_init)*60)+3, 56, 56))
+                # Number is already used in row, col, sq (or all)
+                if col_count > 1 or row_count > 1 or sq_count > 1:
+                    invalid[(x, y)] = num
 
-                                screen.blit(num_font.render(str(entries[((ind[1][0]+sq_x_init)*60,(ind[0][0]+sq_y_init)*60)]) , True , (255,0,0)), (25+((ind[1][0]+sq_x_init)*60), 25+((ind[0][0]+sq_y_init)*60)))
-                            #ind[0][0]+sq_y_init, ind[1][0]+sq_x_init
+                    if assist:
+                        py.draw.rect(screen, PINK, py.Rect(
+                            x + 3, y + 3, 56, 56)
+                        )
                 else:
-                    #Update entry for pos and display
-                    prev = entries[(x,y)]
-                    
-                    entries[(x,y)] = int(input_num)   
-                    
-                    num = int(input_num)
-
-                    vals = [[grid[col][row] if grid[col][row] != 0 else entries[(row*60, col*60)] for row in range(9)] for col in range(9)]
-                    np_grid = np.array(vals) 
-                    sq_x_init = 3*round((int(x/60)-1)/3)
-                    sq_y_init = 3*round((int(y/60)-1)/3)
-                    square = np_grid[sq_y_init:sq_y_init+3, sq_x_init:sq_x_init+3] 
-
-                    if (np.count_nonzero(np_grid[:,int(x/60)] == num) > 1 or
-                        np.count_nonzero(np_grid[int(y/60),:] == num) > 1
-                        or np.count_nonzero(square == num) > 1):  
-                        invalid_spots[(x,y)] = num
-                    else:
-                        if (x,y) in invalid_spots.keys():
-                            del invalid_spots[(x,y)] 
-                    col_count = np.count_nonzero(np_grid[:,int(x/60)] == prev)
-                    row_count = np.count_nonzero(np_grid[int(y/60),:] == prev)
-                    sq_count = np.count_nonzero(square == prev)
-            
-                    #COL
-                    if (col_count == 1):
-                        ind = np.where((np_grid[:,int(x/60)]) == prev)
-
-                        if str(entries[x,(ind[0][0]*60)]).isnumeric() and str(prev).isnumeric() and prev != 0:
-                            t = np_grid[3*round((int(x/60)-1)/3):(3*round((int(x/60)-1)/3)+3), 3*round((ind[0][0]-1)/3):3*round((ind[0][0]-1)/3)+3]
-                            if (not np.count_nonzero(np_grid[ind[0][0],:] == prev) > 1 and 
-                                not np.count_nonzero(t == prev) > 1) and (y != ind[0][0]*60): 
-                                if (x,(ind[0][0]*60)) in invalid_spots.keys():
-                                    del invalid_spots[(x,(ind[0][0]*60))] 
-
-                    #ROW
-                    if (row_count == 1):
-                        ind = np.where((np_grid[int(y/60),:]) == prev)
-
-                        if str(entries[(ind[0][0]*60),y]).isnumeric() and str(prev).isnumeric() and prev != 0:
-                           
-                            t = np_grid[3*round((ind[0][0]-1)/3):3*round((ind[0][0]-1)/3)+3, 3*round((int(y/60)-1)/3):(3*round((int(y/60)-1)/3)+3)]
-                           
-                            if (not np.count_nonzero(np_grid[:,ind[0][0]] == prev) > 1 and 
-                                not np.count_nonzero(t == prev) > 1) and (x != ind[0][0]*60):
-                                if ((ind[0][0]*60),y) in invalid_spots.keys():
-                                    del invalid_spots[((ind[0][0]*60),y)]  
-
-                    if (sq_count == 1):
-                        ind = np.where(square == prev)
-                        
-                        if str(entries[((ind[1][0]+sq_x_init)*60,(ind[0][0]+sq_y_init)*60)]).isnumeric() and str(prev).isnumeric() and prev != 0:
-                            if (not np.count_nonzero(np_grid[:,ind[0][0]+sq_y_init] == prev) > 1 and 
-                                not np.count_nonzero(np_grid[ind[1][0]+sq_x_init,:] == prev) > 1 and 
-                                (x,y) != ((ind[1][0]+sq_x_init)*60, (ind[0][0]+sq_y_init)*60)):
-                                if ((ind[1][0]+sq_x_init)*60,(ind[0][0]+sq_y_init)*60) in invalid_spots.keys():
-                                    del invalid_spots[((ind[1][0]+sq_x_init)*60,(ind[0][0]+sq_y_init)*60)]  
-
-                screen.blit(num_font.render(input_num , True , (255,0,0)), (25+x, 25+y))
+                    if (x, y) in invalid.keys():
+                        del invalid[(x, y)] 
+                    if assist:
+                        if generate_sol:
+                            py.draw.rect(screen, WHITE, py.Rect(x + 3, y + 3,
+                                56, 56))
+                        else:
+                            py.draw.rect(screen, VIOLET, py.Rect(x + 3, y + 3,
+                                56, 56))
                 
+                # Count occurrences to check if the change to prev 
+                # entry make another entry valid
+                (col_count, row_count, sq_count) = gh.count_occurrences(
+                    curr_vals, prev, x, y
+                )
+
+            
+                if (col_count == 1) and prev != 0:
+                    # Change color of prev to indicate it is valid, 
+                    # locate its position and check the sq and row
+                    # for duplicates
+                    
+                    idx = np.where(curr_vals[:,x // 60] == prev)
+                    idx = idx[0][0]
+                    
+                    if (str(entries[x, idx * 60]).isnumeric() and 
+                        str(prev).isnumeric()):
+                        
+                        sq = gh.get_square(curr_vals, x, idx)                       
+                        
+                        if (not np.count_nonzero(curr_vals[idx,:] == prev)
+                            > 1 and not np.count_nonzero(sq == prev) > 1
+                            and (y != idx * 60)): 
+                        
+                           
+                            if (x, idx * 60) in invalid.keys():
+                                del invalid[(x, (idx * 60))] 
+
+                            if assist:
+                                if generate_sol:
+                                    py.draw.rect(screen, WHITE, py.Rect(x + 3,
+                                        y + 3, 56, 56))
+                                else:
+                                    py.draw.rect(screen, VIOLET,
+                                        py.Rect(x + 3, (idx * 60) + 3, 56, 56)
+                                    )
+                            
+                                screen.blit(num_font.render(str(entries[x, 
+                                    (idx * 60)]), True, RED), 
+                                    (25 + x, 25 + (idx * 60))
+                                )
+
+                if (row_count == 1) and prev != 0:
+                    idx = np.where(curr_vals[y // 60,:] == prev)
+                    idx = idx[0][0]
+                    
+                    if (str(entries[(idx * 60), y]).isnumeric() and 
+                        str(prev).isnumeric()):
+                        
+                        sq = gh.get_square(curr_vals, idx, y)
+                    
+                        if (not np.count_nonzero(curr_vals[:,idx] == prev) > 1
+                            and not np.count_nonzero(sq == prev) > 1 
+                            and (x != idx * 60)):
+                            if ((idx * 60), y) in invalid.keys():
+                                del invalid[((idx * 60), y)] 
+                            if assist: 
+                                if generate_sol:
+                                    py.draw.rect(screen, WHITE, py.Rect(x + 3, 
+                                        y + 3, 56, 56)
+                                    )
+                                else:
+                                    py.draw.rect(screen, VIOLET, 
+                                        py.Rect((idx * 60) + 3, y + 3, 56, 56)
+                                    )
+                        
+                                screen.blit(num_font.render(
+                                    str(entries[(idx * 60), y]), True, RED),
+                                    (25 + (idx * 60), 25 + y)
+                                )                    
+            
+                if (sq_count == 1) and prev != 0:
+                    idx = np.where(square == prev)
+                    x_idx = idx[1][0] + 3 * round(((x // 60) - 1) / 3)
+                    y_idx = idx[0][0] + 3 * round(((y // 60) - 1) / 3)
+                    
+                    cell_idx = (x_idx * 60, y_idx * 60) 
+                
+                    if (str(entries[cell_idx]).isnumeric() and 
+                        str(prev).isnumeric()):
+                        
+                        if (not (np.count_nonzero(curr_vals[:,y_idx] == prev) 
+                            > 1) and not (np.count_nonzero(curr_vals[x_idx,:] 
+                            == prev) > 1) and 
+                            (x, y) != (x_idx * 60, y_idx * 60)):
+                            
+                            if cell_idx in invalid.keys():
+                                del invalid[cell_idx] 
+
+                            if assist:
+                                if generate_sol:
+                                    py.draw.rect(screen, WHITE, 
+                                    py.Rect(x + 3, y + 3, 56, 56))
+                            else:
+                                py.draw.rect(screen, VIOLET, py.Rect(
+                                    cell_idx[0] + 3, cell_idx[1] + 3,
+                                    56, 56)
+                                )
+
+                            screen.blit(num_font.render(str(
+                                entries[cell_idx]), True, RED), 
+                                (25 + cell_idx[0], 25 + cell_idx[1])
+                            )
+            
+                screen.blit(num_font.render(input_num, True, RED), 
+                    (25 + x, 25 + y)
+                )
+            
                 #Reset
                 input_num = 0
+
         pos = False
     elif enter_board:
-        #Checking which keys are being pressed (used for holding feature)
+        game_setup.enter_board_screen(screen, curr_pos)
+        
         keys_pressed = py.key.get_pressed()
-
+         
         if keys_pressed[py.K_LEFT]:
             if not blurred:
-                #Erase previous empty square
-                if entries_ent[(x1,y1)] == 0:
-                    py.draw.rect(screen,(255, 255, 255), py.Rect(x1+3,y1+3, 56, 56)) 
-                #Advance in given dir
+                # Erase previous empty square
+                gh.enter_board_adv(screen, (x1, y1, WHITE), entries_ent)
+                
+                # Advance in given dir
                 x1 = gh.set_num(x1, -60)
-                #Highlight new pos
-                if entries_ent[(x1,y1)] == 0:
-                    py.draw.rect(screen,(255, 204, 255), py.Rect(x1+3,y1+3, 56, 56))
+                
+                # Highlight new pos
+                gh.enter_board_adv(screen, (x1, y1, VIOLET), entries_ent)
 
         if keys_pressed[py.K_RIGHT]:
             if not blurred:
-                if entries_ent[(x1,y1)] == 0:
-                    py.draw.rect(screen,(255, 255, 255), py.Rect(x1+3,y1+3, 56, 56))
+                gh.enter_board_adv(screen, (x1, y1, WHITE), entries_ent)
                 
                 x1 = gh.set_num(x1, 60)
                 
-                if entries_ent[(x1,y1)] == 0:
-                    py.draw.rect(screen,(255, 204, 255), py.Rect(x1+3,y1+3, 56, 56))
+                gh.enter_board_adv(screen, (x1, y1, VIOLET), entries_ent)
 
         if keys_pressed[py.K_UP]:
             if not blurred:
-                if entries_ent[(x1,y1)] == 0:
-                    py.draw.rect(screen,(255, 255, 255), py.Rect(x1+3,y1+3, 56, 56))
+                gh.enter_board_adv(screen, (x1, y1, WHITE), entries_ent)
                 
                 y1 = gh.set_num(y1, -60)
                 
-                if entries_ent[(x1,y1)] == 0:
-                    py.draw.rect(screen,(255, 204, 255), py.Rect(x1+3,y1+3, 56, 56))
+                gh.enter_board_adv(screen, (x1, y1, VIOLET), entries_ent)
 
         if keys_pressed[py.K_DOWN]:
             if not blurred:
-                if entries_ent[(x1,y1)] == 0:
-                    py.draw.rect(screen,(255, 255, 255), py.Rect(x1+3,y1+3, 56, 56))
+                gh.enter_board_adv(screen, (x1, y1, WHITE), entries_ent)
                 
                 y1 = gh.set_num(y1, 60)
                 
-                if entries_ent[(x1,y1)] == 0:
-                    py.draw.rect(screen,(255, 204, 255), py.Rect(x1+3,y1+3, 56, 56))
-          
-    
-        if (pos and not(pos[1] >= 550 and pos[1] <= 590) and str(entries_ent[gh.round_num(pos[0]), gh.round_num(pos[1])]).isnumeric()):
+                gh.enter_board_adv(screen, (x1, y1, VIOLET), entries_ent)
+        
+        if ((pos and not(pos[1] >= 550 and pos[1] <= 590) and 
+            str(entries_ent[gh.round_num(pos[0]), 
+                gh.round_num(pos[1])]).isnumeric())):
+
+            curr_idx = (gh.round_num(pos[0]), gh.round_num(pos[1]))
+
             if sol_ent == []:
-                py.draw.rect(screen,(255, 204, 255), py.Rect(gh.round_num(pos[0])+3,gh.round_num(pos[1])+3, 56, 56))
+                py.draw.rect(screen, VIOLET, py.Rect(curr_idx[0] + 3, 
+                    curr_idx[1] + 3, 56, 56))
     
-                #click
-                if entries_ent[(x1,y1)] == 0 and not ((gh.round_num(pos[0]), gh.round_num(pos[1])) == (x1,y1)):
-                    py.draw.rect(screen,(255, 255, 255), py.Rect(x1+3,y1+3, 56, 56))
+                # Click
+                if entries_ent[(x1, y1)] == 0 and not curr_idx == (x1, y1):
+                    py.draw.rect(screen, WHITE, py.Rect(x1 + 3, y1 + 3, 
+                        56, 56))
 
-                (x1,y1) = (gh.round_num(pos[0]), gh.round_num(pos[1]))
+                (x1, y1) = curr_idx
                 
-                if str(entries_ent[(x1,y1)]).isnumeric() and entries_ent[(x1,y1)]!= 0:
-                    screen.blit(num_font.render(str(entries_ent[(x1,y1)]), True , (0,0,0)), (25+x1, 25+y1))
+                if (str(entries_ent[curr_idx]).isnumeric() and 
+                    entries_ent[curr_idx] != 0):
 
-        #Enter input
-        if str(input_num).isnumeric() and int(input_num) >= 1 and int(input_num) <= 9 and str(entries_ent[(x1,y1)]).isnumeric():
-                if sol_ent == []:
-                    curr_pos = py.mouse.get_pos()
-                    
-                    #del need to re-highlight
-                    if sum(i == 0 for i in entries_ent.values()) == 81:
-                        py.draw.rect(screen,(255, 204, 255), py.Rect(x1+3,y1+3, 56, 56))
+                    screen.blit(num_font.render(str(entries_ent[curr_idx]), 
+                        True, BLACK), (25 + x1, 25 + y1))
 
-                    #Spot is used (need to re-highlight)
-                    if (entries_ent[(x1,y1)] != 0) or ((gh.round_num(curr_pos[0]), gh.round_num(curr_pos[1])) == (x1,y1)):
-                        py.draw.rect(screen,(255, 204, 255), py.Rect(x1+3,y1+3, 56, 56))
-                    
-                    #Update entry for pos and display
-                    entries_ent[(x1,y1)] = int(input_num)
+        if (str(input_num).isnumeric() and int(input_num) >= 1 and 
+            int(input_num) <= 9 and str(entries_ent[(x1, y1)]).isnumeric()): 
+            # Enter input
+            
+            if sol_ent == []:    
+                
+                if sum(i == 0 for i in entries_ent.values()) == 81:
+                    # Delete pressed, need to re-highlight cell
+                    py.draw.rect(screen, VIOLET, py.Rect(x1 + 3, y1 + 3, 56, 56))
+      
+                if (entries_ent[(x1, y1)] != 0 or (gh.round_num(curr_pos[0]), 
+                    gh.round_num(curr_pos[1])) == (x1,y1)):
+                    # Spot is used (need to re-highlight)
+                    py.draw.rect(screen, VIOLET, py.Rect(x1 + 3, y1 + 3, 56, 56))
+                
+                # Update entry for pos and display
+                entries_ent[(x1, y1)] = int(input_num)
 
-                    screen.blit(num_font.render(input_num , True , (0,0,0)), (25+x1, 25+y1))
-                    
-                    #Reset
-                    input_num = 0
+                screen.blit(num_font.render(input_num, True, BLACK), (25 + x1, 25 + y1))
+                
+                # Reset
+                input_num = 0
         pos = False
     else:
         game_setup.home_screen(screen, py.mouse.get_pos(), text_font)
         
+        # Keep highlight on clicked button
         if easy:
-            py.draw.rect(screen, (255,204,255), py.Rect(50, 410, 100, 40))
-            py.draw.rect(screen, (0, 0, 0), py.Rect(50, 410, 100, 40), 3)
-            screen.blit(text_font.render('EASY' , True , (0,0,0)) , (75, 420))
+            py.draw.rect(screen, VIOLET, py.Rect(50, 410, 100, 40))
+            py.draw.rect(screen, BLACK, py.Rect(50, 410, 100, 40), 3)
+            screen.blit(text_font.render('EASY', True, BLACK), (75, 420))
         elif medium:
-            py.draw.rect(screen, (255,204,255), py.Rect(210, 410, 100, 40))
-            py.draw.rect(screen, (0, 0, 0), py.Rect(210, 410, 100, 40), 3)
-            screen.blit(text_font.render('MEDIUM' , True , (0,0,0)) , (228, 420))
+            py.draw.rect(screen, VIOLET, py.Rect(210, 410, 100, 40))
+            py.draw.rect(screen, BLACK, py.Rect(210, 410, 100, 40), 3)
+            screen.blit(text_font.render('MEDIUM', True, BLACK), (228, 420))
         elif hard:
-            py.draw.rect(screen, (255,204,255), py.Rect(370, 410, 100, 40))
-            py.draw.rect(screen, (0, 0, 0), py.Rect(370, 410, 100, 40), 3)
-            screen.blit(text_font.render('HARD' , True , (0,0,0)) , (398, 420))
+            py.draw.rect(screen, VIOLET, py.Rect(370, 410, 100, 40))
+            py.draw.rect(screen, BLACK, py.Rect(370, 410, 100, 40), 3)
+            screen.blit(text_font.render('HARD', True, BLACK), (398, 420))
 
         if assist:
-            py.draw.rect(screen, (255, 204, 255), py.Rect(130, 515, 100, 40))
-            py.draw.rect(screen, (0, 0, 0), py.Rect(130, 515, 100, 40), 3)
+            py.draw.rect(screen, VIOLET, py.Rect(130, 515, 100, 40))
+            py.draw.rect(screen, BLACK, py.Rect(130, 515, 100, 40), 3)
 
-            screen.blit(text_font.render('On' , True , (0,0,0)) , (168, 525))
-            screen.blit(text_font.render('Off' , True , (0,0,0)) , (330, 525))
+            screen.blit(text_font.render('On', True, BLACK), (168, 525))
+            screen.blit(text_font.render('Off', True, BLACK), (330, 525))
         elif assist == False:
-            py.draw.rect(screen, (255, 204, 255), py.Rect(300, 515, 100, 40))
-            py.draw.rect(screen, (0, 0, 0), py.Rect(300, 515, 100, 40), 3)  
+            py.draw.rect(screen, VIOLET, py.Rect(300, 515, 100, 40))
+            py.draw.rect(screen, BLACK, py.Rect(300, 515, 100, 40), 3)  
 
-            screen.blit(text_font.render('On' , True , (0,0,0)) , (168, 525))    
-            screen.blit(text_font.render('Off' , True , (0,0,0)) , (330, 525))
+            screen.blit(text_font.render('On', True, BLACK), (168, 525))    
+            screen.blit(text_font.render('Off', True, BLACK), (330, 525))
 
-        game_started = False
-    
     if info:
         # Load info screen
         game_setup.info_screen(screen, py.mouse.get_pos())
         
-    #Display
+    # Display
     py.display.flip()
     fpsclock.tick(fps)
     
