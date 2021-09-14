@@ -1,26 +1,29 @@
-                     INSTRUCTIONS
-------------------------------------------------------
-RULES: Enter a number from 1 to 9 in each of the cells 
-       in the grid ensuring each of the rows, columns,
-       and square boxes contain each of these number 
-       with no repeats
+                    RULES
+Fill the grid by entering 1 - 9 once in each of the 
+rows, columns, and 3x3 squares
 
-CONTROLS: 1) Mouse click or UP, DOWN, LEFT, RIGHT arrow
-             key to move 
-            
-          2) DELETE key to clear board
+Press START to begin a new game or ENTER to find a 
+soltion for your own board 
 
-          3) BACKSPACE key to remove an entry
+                    MODES
+EASY: 39 - 49 given clues          
+MEDIUM: 28 - 38 given clues
+HARD: 17 - 27 given clues
+                 
+ON: mistakes are shown in red
+OFF: all entries displayed in blue 
 
-          4) Music keys: -F to forward
-                         -B to back 
-                         -P to pause/play
-             <TAKE OUT LATER -- JUST FOR YOU RN PAL
-               ...and fun mode>
-Press start to begin a new game or press enter to check
-your own board
+                  CONTROLS
+Click move or UP, DOWN, LEFT, RIGHT arrow key to move 
+DELETE key to clear board
+BACKSPACE key to remove an entry
+Press the 1 - 9 number keys to enter input
 
-            
-              
+                   NOTES
+Modes are not applicable for ENTER
+If no difficulty mode is selected for START then one 
+is assigned randomly
+START and ENTER modes can be switched between without
+changes to either boards
 
-          
+
