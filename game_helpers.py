@@ -1,4 +1,5 @@
 import numpy as np
+import pygame as py
 
 def round_num(num):
     """Rounding number based on which range its falls in
@@ -56,7 +57,7 @@ def get_cell_indices():
     return cell_indices
 
 
-def set_ents_dicts(sol, used_spots):
+def set_ents_dicts(used_spots):
     """Set to dictionarys to keep track of a Sudoku puzzle solution
        and entries
 
@@ -65,19 +66,18 @@ def set_ents_dicts(sol, used_spots):
     used_spots (list):  indices of cells with given clues
     """
 
-    sol_entries = entries = {}
+    entries = {}
 
     for idx in get_cell_indices():
         if idx not in used_spots:
-            sol_entries[idx] = sol[idx[0] // 60][idx[1] // 60]
             entries[idx] = 0
         else:
-            sol_entries[idx] =  entries[idx] = True
+            entries[idx] = True
 
-    return sol_entries, entries
+    return entries
 
 
-def get_curr_grid_vals(entries, used_spots, sol=None):
+def get_curr_grid_vals(entries, used_spots=None, grid=None):
     """Gets current values in Sudoku puzzle
 
     Args:
@@ -85,12 +85,85 @@ def get_curr_grid_vals(entries, used_spots, sol=None):
     used_spots (list):  indices of cells with given clues
     """
     curr_grid_vals = np.asarray(list(entries.values())).reshape((9, 9))
+    curr_grid_vals = np.transpose(curr_grid_vals)
 
-    if sol is not None:
+    if grid is not None:
         for key in used_spots:
-            idx = tuple(elem // 60 for elem in key)
-            curr_grid_vals[idx] = sol[idx]
+            (x, y) = key
+            idx = (y // 60, x // 60)
+            curr_grid_vals[idx] = grid[idx]
 
     return curr_grid_vals
 
 
+def get_square(curr_vals, x, y):
+    sq_x_init = 3 * round(((x // 60) - 1) / 3)
+    sq_y_init = 3 * round(((y // 60) - 1) / 3)
+    
+    return curr_vals[sq_y_init:sq_y_init + 3, sq_x_init:sq_x_init + 3]
+
+
+def count_occurrences(curr_vals, num, x, y):
+    square = get_square(curr_vals, x, y)
+
+    col_count = np.count_nonzero(curr_vals[:,x // 60] == num)
+    row_count = np.count_nonzero(curr_vals[y // 60,:] == num)
+    sq_count = np.count_nonzero(square == num)
+
+    return (col_count, row_count, sq_count)
+
+
+def advance(screen, cell, grid, entries, invalid_ent=False):
+    num_font = py.font.SysFont('Monotype', 20, bold=True)
+    BLACK = (0, 0, 0)
+    BLUE = (0, 0, 255)
+    RED = (255, 0, 0)
+
+    (x, y, color) = cell
+    cell_idx = (x, y)
+    idx = (y // 60, x // 60)
+
+    py.draw.rect(screen, color, py.Rect(x + 3, y + 3, 56, 56)) 
+
+    
+    if str(entries[cell_idx]).isnumeric() and entries[cell_idx] != 0:
+        if invalid_ent:
+            screen.blit(num_font.render(str(entries[cell_idx]), True, RED),
+                (25 + x, 25 + y)
+            )
+        else:
+            screen.blit(num_font.render(str(entries[cell_idx]), True, BLUE),
+                (25 + x, 25 + y)
+            )
+    elif not str(entries[cell_idx]).isnumeric():
+        screen.blit(num_font.render(str(grid[idx]), True, BLACK),
+            (25 + x, 25 + y)
+        )
+
+def enter_board_adv(screen, cell, entries_ent, sol_ent=False):
+    (x1, y1, color) = cell
+    BLACK = (0, 0, 0)
+    BLUE = (0, 0, 255)
+    num_font = py.font.SysFont('Monotype', 20, bold=True)
+
+    #Erase previous empty square
+    py.draw.rect(screen, color, py.Rect(x1 + 3, y1 + 3, 56, 56)) 
+    
+    if type(sol_ent) == np.ndarray and entries_ent[(x1, y1)] == 0:
+        screen.blit(num_font.render(str(sol_ent[(y1//60, x1//60)]), True, BLUE),
+                (25 + x1, 25 + y1)
+        )
+    else:
+        if entries_ent[(x1, y1)] != 0:
+            screen.blit(num_font.render(str(entries_ent[(x1, y1)]), True, BLACK),
+                    (25 + x1, 25 + y1)
+            )
+
+
+# def set_font_color(invalid, assist, ):
+#     if (x, y) in invalid.keys() and assist:
+#         screen.blit(num_font.render(str(grid[(curr_y // 60, curr_x // 60)]), 
+#         True, BLACK), (25 + curr_x, 25 + curr_y))
+#     else:
+#         screen.blit(num_font.render(str(grid[(curr_y // 60, curr_x // 60)]), 
+#         True, BLACK), (25 + curr_x, 25 + curr_y))
