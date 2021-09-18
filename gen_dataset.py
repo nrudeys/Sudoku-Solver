@@ -1,149 +1,74 @@
-import random
 import numpy as np
+import random
+import solve_dataset as sd
+import vertify_validness as verify
 
-#Global variables 
-grid_indices = [i for i in range(9)]
-possible_nums = [i for i in range(1,10)]
 
-#Generating sudoku puzzle w/ complete solution, first filling diagonal square then non-diagonal
-def fill_grid():
+def gen_puzzle(init_min, init_max, min_loop, max_loop, max_val):
+    """Generates an incomplete Sudoku puzzle
 
-    #Creating empty dataset to represent grid (2D-matrix)
-    grid = [[0 for row in range(9)] for col in range(9)]
+    This function takes the arguments and passes it to the 
+    remove_entriesfunction, the given values indicate how many entries
+    to remove initially (values depend on selected "mode") and within a
+    loop
 
-    fill_diagonal(grid)
+    Args:
+        init_min (int): initial min value for removing values
+        init_max (int): initial max value for removing values
+        min_loop (int): min value for removing values 
+        max_loop (int): max value for removing values
+        max_val (int): max value of entries to be removed from grid
+    """
 
-    #Fill the rest of the grid        
-    completed_puzzle = fill_nondiagonal(grid)
+    grid = np.zeros((9, 9), dtype=int)
 
-    #Print values
-    #print("Complete")
-    #print_grid(grid)
+    # Fill diagonal
+    for i in range(3):
+        grid[3*i:(3*i) + 3, 3*i:(3*i) + 3] = (
+            np.random.choice(np.arange(1, 10), replace=False, size=(3, 3))
+        )
 
-    remove_entries(grid)
-    #print("Removed")
-    #print_grid(grid)
+    # Fill in rest of the grid
+    completed_puzzle = sd.solve_puzzle_helper(grid)
+
+    remove_k_entries(grid, init_min, init_max, min_loop, max_loop, max_val)
+
     return grid
- 
-#Helper function to fill rest of grid, using backtracking algo
-def fill_nondiagonal(grid):
 
-    #Base case, checking if we reached a solution
-    if table_filled(grid):
-        return True
-    else:
 
-        #Locating the next empty cell 
-        (row, col) = located_next_empty(grid)
-        
-        #Going through possible nums and checking if it is valid, we insert num into cell
-        #and do a recursive call for the next empty cell. If we reach a point where all the 
-        #all possible combos are tried and no solution is reached, we backtrack and try to
-        #update the cell with the next possible number. The point of this is to try each possible
-        #combination to reach a solution
-        for num in possible_nums:
-            if check_num_is_valid(grid, num, row, col) and not square_has_num(grid, num, row, col):
-                grid[row][col] = num
+def remove_k_entries(grid, init_min, init_max, min_loop, max_loop, max_val):
+    """Removes entries from a completed Sudoku puzzle grid
 
-                #We found a solution
-                if fill_nondiagonal(grid):
-                    return True
-                
-                #No solution is reach, reset cell to be empty
-                grid[row][col] = 0
-        #All combos were tried with a given num and no solution was reached
-        return False                
+    This function remove K entries from the grid by using the int args
+    passed in. These values indicate the difficultly mode selected by
+    a user.
 
-#Removing k entries from completed puzzle
-def remove_entries(grid):
-    #Since we need at least 17 clues, we can remove up to 64 entries
-    #Going to remove around 40 to 64 to avoid cases with too little or many removed
+    >>EASY MODE: 32 to 42 entries are removed
+    >>MED MODE: 43 to 53 entries are removed
+    >>HARD MODE: 54 to 64 entries are removed
+
+    Args:
+        grid (numpy.ndarray): 2D list to represent the Sudoku puzzle
+        init_min (int): initial min value for removing values
+        init_max (int): initial max value for removing values
+        min_loop (int): min value for removing values 
+        max_loop (int): max value for removing values
+        max_val (int): max value of entries to be removed from grid
+    """
 
     count = 0
+    k = random.randint(init_min, init_max)
 
-    for row in grid_indices:
-        #Selecting k randomly for each row
-        k = random.randint(5,8)
-        
-        while count + k > 64:
-            #Avoiding 8 since we don't want a case in which its all 8 makes a loop
-            k = random.randint(4,6)           
-        count+=k
-        delete = set(random.sample(range(1,len(grid[row])+1), k))
-        grid[row] = [num if num not in delete else 0 for num in grid[row]]
-    print(81-count)
+    for row in [i for i in range(9)]:
+        while count + k > max_val:
+            k = random.randint(min_loop, max_loop)
+
+        count += k
+
+        # Removing K entries
+        delete = set(random.sample(range(1, len(grid[row]) + 1), k))
+        grid[row] = [0 if x in delete else x for x in grid[row]]
+
+        # Selecting k randomly for each row
+        k = random.randint(min_loop, max_loop)
     return grid
-
-#Looking for the next empty cell by checking each cell one by one 
-def located_next_empty(grid):
-    for row in grid_indices:
-        for col in grid_indices:
-            if grid[row][col]==0:
-                return (row, col)
-    
-
-#Checking if all entries in the grid have a value from 1 to 9 (No zeros)
-def table_filled(grid):
-    for row in grid_indices:
-        for col in grid_indices:
-            if grid[row][col]==0:
-                return False
-    return True
-
-
-#Helper function for checking if num is not already in row, col, or square
-def check_num_is_valid(grid, num, grid_row, grid_col):
-    if num in set(grid[grid_row]) or num_in_col(grid, num, grid_col):
-        return False
-    else:
-        return True
-
-#Check col has given num
-def num_in_col(grid, num, col):
-    for row in grid_indices:
-        if grid[row][col] == num:
-            return True
-    return False
-
-#Helper function for checking if square portions already contain given num
-def square_has_num(grid, num, grid_row, grid_col):
-    #Get the 3x3 rows and cols for the input by using nearest multiple of 3
-    #To get nearest mult of 3 used formula: base*round(num-1/base)
-    row = 3*round((grid_row-1)/3)
-    col = 3*round((grid_col-1)/3)
-
-    for row_cell in range(row, row+3):
-        for col_cell in range(col, col+3):
-           if grid[row_cell][col_cell]==num:
-                return True
-
-    return False
-
-#Visual respresentation of sudoku puzzle
-def print_grid(grid):
-    for row in grid_indices:
-        for col in grid_indices:
-            print(str(grid[row][col]) + " ", end='')
-        print("")
-    print("")
-
-def fill_diagonal(grid):
-    #Going through each cell in grid (filling diagonal)
-    for row in grid_indices:
-
-        #Get upper left cell for square according to row #
-        r = 3*round(row//3)
-        
-        #Going to check the 3 columns in current square
-        for col in range(r, r+3):
-
-            #Generating random number from 1 to 9
-            num = random.randint(1,9)
-
-            #Since we are only doing diagonal squares, we only need to check
-            #if current square does not contain chosen num, we only update the cell
-            #with num once we confirm it's valid
-            while square_has_num(grid, num, row, col):
-                num = random.randint(1,9)
-        
-            grid[row][col] = num
