@@ -5,7 +5,7 @@ Generator to create and/or solver Sudoku puzzles
 ## Table of Contents
 1. [Description](#description)
 2. [Getting Started](#gettingstarted)
-    * [Technologies](#technologies)
+    * [Technologies and Libraries](#technologies)
     * [How to Run](#howtorun)
     * [Usage](#usage)
 3. [RoadMap](#roadmap)
