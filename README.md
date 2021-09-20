@@ -23,7 +23,7 @@ an user can choose for difficulty and/or assistance.
 * Numpy
 ### How to Run
 #### Clone Repository
-<u>Go to terminal and paste</u>:  
+<ins>Go to terminal and paste</ins>:  
 git clone https://github.com/nrudeys/Sudoku-Solver.git
 
 #### To run EXE
