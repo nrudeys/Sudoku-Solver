@@ -1,2 +1,3 @@
 # Sudoku-Solver
-Sudoku Solver using Python
+
+# Table of Contents
