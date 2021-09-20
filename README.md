@@ -2,4 +2,7 @@
 
 Interactive Sudoku solver
 
-# Table of Contents
+## Table of Contents
+* [Description](#description)
+
+## <a name="description"></a>Description
