@@ -63,10 +63,10 @@ HARD: 17 - 27 given clues
   <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f4707b95ca6bf9aae30c3ad152baa717c341b740/hard.png" width="250">
 
 ##### In game-buttons:
-New game: generates a new game with same selected difficulty/assist modes  
-Generate solution: generates a solution for Sudoku puzzle  
-Verify solution: Checks if current board has a valid solution  
-Back: Returns user to home screen  
+<ins>New game</ins>: generates a new game with same selected difficulty/assist modes  
+<ins>Generate solution</ins>: generates a solution for Sudoku puzzle  
+<ins>Verify solution</ins>: Checks if current board has a valid solution  
+<ins>Back</ins>: Returns user to home screen  
 
 ##### Assist modes
 If assist is on, the game will indicate cells that have conflicting entries with one another by changing its
@@ -74,7 +74,7 @@ font to red. Otherwise, all entries are blue regardless of conflictions.
 
 Example:  
 <p align="center">  
-  <img src="https://github.com/nrudeys/Sudoku-Solver/blob/61a3bb50631b8c4ca56e016ba83f3054cffcd6ed/assist.gif" alt="assist animated" />
+  <img src="https://github.com/nrudeys/Sudoku-Solver/blob/61a3bb50631b8c4ca56e016ba83f3054cffcd6ed/assist.gif" alt="assist animated" width="350"/>
 </p>
   
 NOTE: assist mode can be changed mid-game
@@ -89,9 +89,9 @@ Example:
 </p>
 
 ##### In game-buttons:
-Clear: Removes all entries from board  
-Solve: Generates a solution if one can be found and board is valid  
-Back: Returns user to home screen  
+<ins>Clear</ins>: Removes all entries from board  
+<ins>Solve</ins>: Generates a solution if one can be found and board is valid  
+<ins>Back</ins>: Returns user to home screen  
 
 ## RoadMap
 ## Acknowledgements
