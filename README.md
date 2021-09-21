@@ -29,10 +29,24 @@ an user can choose for difficulty and/or assistance.
 Go to dist directory in cloned folder and double click on sudoku-solver
 application
 
-#### Create EXE application
+#### NOTE: to create EXE application
 pyinstaller -F --noconsole --add-data "instructions.txt;." --add-data "background.png;." sudoku_solver.py
 
 ### Usage
+The game has two start modes START and ENTER. Additional information such as
+rules, controls, and notes can be found in INFO.
+
+![alt text](https://github.com/nrudeys/Sudoku-Solver/blob/fec704913523408788eb4a3e284b04c530d60f79/start_game.png)
+
+
+#### START mode
+
+#### ENTER mode
+
+In START mode, an user can ch
+incompleted
+Sudoku puzzle is generated 
+
 
 ## RoadMap
 ## Acknowledgements
