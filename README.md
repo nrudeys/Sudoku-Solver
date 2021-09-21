@@ -40,8 +40,28 @@ rules, controls, and notes can be found in INFO.
     <img src="https://github.com/nrudeys/Sudoku-Solver/blob/fec704913523408788eb4a3e284b04c530d60f79/start_game.png" width="350" height="350">
 </p>
 
-
 #### START mode
+Before clicking START, an user can also choose a difficulty and assist mode. However, this is
+optional. If assist mode is not chosen its default is to be off but if a difficulty mode is not chosen,
+one is selected randomly. 
+
+<p align="center">
+    <img src="https://github.com/nrudeys/Sudoku-Solver/blob/452a257be55c632b60f5cf717a5a85ccffcf4193/start_modes.png" width="350" height="350">
+</p>
+
+##### Difficulty modes
+EASY: 39 - 49 given clues          
+MEDIUM: 28 - 38 given clues
+HARD: 17 - 27 given clues
+
+<img align="left" src="https://github.com/nrudeys/Sudoku-Solver/blob/9e04b1ded2dc7290d3eb0d93714e8af3e531edc4/easy.png" width="350" height="350">
+
+##### Assist modes
+If on, the game will indicate cells that have conflicting entries with one another
+
+
+
+
 
 #### ENTER mode
 
