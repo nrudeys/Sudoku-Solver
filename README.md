@@ -89,9 +89,9 @@ Example:
 </p>
 
 ##### In game-buttons:
-Clear: Removes all entries from board
-Solve: Generates a solution if one can be found and board is valid
-Back: Returns user to home screen
+Clear: Removes all entries from board  
+Solve: Generates a solution if one can be found and board is valid  
+Back: Returns user to home screen  
 
 ## RoadMap
 ## Acknowledgements
