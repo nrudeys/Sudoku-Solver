@@ -4,9 +4,9 @@ Generator to create and/or solver Sudoku puzzles
 
 ## Table of Contents
 1. [Description](#description)
-2. [Getting Started](#gettingstarted)
-    * [Technologies and Libraries](#technologies)
-    * [How to Run](#howtorun)
+2. [Getting Started](#getting-started)
+    * [Technologies and Libraries](#technologies-and-libraries)
+    * [How to Run](#how-to-run)
     * [Usage](#usage)
 3. [RoadMap](#roadmap)
 4. [Acknowledgements](#acknowledgements)
@@ -26,7 +26,7 @@ an user can choose for difficulty and/or assistance.
 <ins>Go to terminal and paste</ins>: git clone https://github.com/nrudeys/Sudoku-Solver.git
 
 #### To run EXE
-Go to dist directory in repository and double click on sudoku-solver
+Go to dist directory in cloned folder and double click on sudoku-solver
 application
 
 #### Create EXE application
