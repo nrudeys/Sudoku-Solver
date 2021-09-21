@@ -85,7 +85,7 @@ valid and a solution can be found.
 
 Example:  
 <p align="center">  
-  <img src="https://github.com/nrudeys/Sudoku-Solver/blob/e22cface6112f0f9d9ead7120d05364e8282ffb0/enter.gif" alt="enter animated" />
+  <img src="https://github.com/nrudeys/Sudoku-Solver/blob/e22cface6112f0f9d9ead7120d05364e8282ffb0/enter.gif" alt="enter animated" width="350"/>
 </p>
 
 ##### In game-buttons:
