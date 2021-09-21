@@ -41,6 +41,8 @@ rules, controls, and notes can be found in INFO.
 </p>
 
 #### START mode
+START mode generates an incompleted Sudoku puzzle  
+
 Before clicking START, an user can also choose a difficulty and assist mode. However, this is
 optional. If assist mode is not chosen its default is to be off but if a difficulty mode is not chosen,
 one is selected randomly. 
@@ -60,21 +62,25 @@ HARD: 17 - 27 given clues
   <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f4707b95ca6bf9aae30c3ad152baa717c341b740/med.png"     width="250">
   <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f4707b95ca6bf9aae30c3ad152baa717c341b740/hard.png" width="250">
 
-
 ##### Assist modes
-If on, the game will indicate cells that have conflicting entries with one another
+If assist is on, the game will indicate cells that have conflicting entries with one another by changing its
+font to red. Otherwise, all entries are blue regardless of conflictions.
 
+Example:  
 <p align="center">  
   <img src="https://github.com/nrudeys/Sudoku-Solver/blob/61a3bb50631b8c4ca56e016ba83f3054cffcd6ed/assist.gif" alt="assist animated" />
 </p>
-
+  
+NOTE: assist mode can be changed mid-game
 
 #### ENTER mode
+ENTER mode lets users provide their own Sudoku puzzle. It can generate a solution if given board is
+valid and a solution can be found.
 
-In START mode, an user can ch
-incompleted
-Sudoku puzzle is generated 
-
+Example:  
+<p align="center">  
+  <img src="https://github.com/nrudeys/Sudoku-Solver/blob/e22cface6112f0f9d9ead7120d05364e8282ffb0/enter.gif" alt="enter animated" />
+</p>
 
 ## RoadMap
 ## Acknowledgements
