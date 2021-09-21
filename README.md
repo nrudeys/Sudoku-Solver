@@ -52,8 +52,9 @@ one is selected randomly.
 ##### Difficulty modes
 EASY: 39 - 49 given clues          
 MEDIUM: 28 - 38 given clues
-HARD: 17 - 27 given clues
+HARD: 17 - 27 given clues  
 
+Examples:  
 <p float="left">
   <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f4707b95ca6bf9aae30c3ad152baa717c341b740/easy.png" width="250">
   <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f4707b95ca6bf9aae30c3ad152baa717c341b740/med.png"     width="250">
