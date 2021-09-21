@@ -64,8 +64,10 @@ HARD: 17 - 27 given clues
 ##### Assist modes
 If on, the game will indicate cells that have conflicting entries with one another
 
-<p float="center">
+<p float="center">  
+
 ![Assist mode gif](https://github.com/nrudeys/Sudoku-Solver/blob/61a3bb50631b8c4ca56e016ba83f3054cffcd6ed/assist.gif)
+
 </p>
 
 
