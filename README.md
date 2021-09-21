@@ -51,22 +51,21 @@ one is selected randomly.
 
 ##### Difficulty modes
 EASY: 39 - 49 given clues          
-MEDIUM: 28 - 38 given clues
+MEDIUM: 28 - 38 given clues  
 HARD: 17 - 27 given clues  
 
-Examples:  
+<ins>Examples</ins>:  
 <p float="left">
   <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f4707b95ca6bf9aae30c3ad152baa717c341b740/easy.png" width="250">
   <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f4707b95ca6bf9aae30c3ad152baa717c341b740/med.png"     width="250">
   <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f4707b95ca6bf9aae30c3ad152baa717c341b740/hard.png" width="250">
 </p>
 
-
 ##### Assist modes
 If on, the game will indicate cells that have conflicting entries with one another
 
 
-
+![Assist mode gif](https://github.com/nrudeys/Sudoku-Solver/blob/61a3bb50631b8c4ca56e016ba83f3054cffcd6ed/assist.gif)
 
 
 #### ENTER mode
