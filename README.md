@@ -72,7 +72,7 @@ HARD: 17 - 27 given clues
 If assist is on, the game will indicate cells that have conflicting entries with one another by changing its
 font to red. Otherwise, all entries are blue regardless of conflictions.
 
-Example:  
+Example:
 <p align="center">  
   <img src="https://github.com/nrudeys/Sudoku-Solver/blob/61a3bb50631b8c4ca56e016ba83f3054cffcd6ed/assist.gif" alt="assist animated" width="350"/>
 </p>
@@ -83,7 +83,7 @@ NOTE: assist mode can be changed mid-game
 ENTER mode lets users provide their own Sudoku puzzle. It can generate a solution if given board is
 valid and a solution can be found.
 
-Example:  
+Example:
 <p align="center">  
   <img src="https://github.com/nrudeys/Sudoku-Solver/blob/e22cface6112f0f9d9ead7120d05364e8282ffb0/enter.gif" alt="enter animated" width="350"/>
 </p>
