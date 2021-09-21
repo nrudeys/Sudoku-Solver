@@ -34,7 +34,7 @@ pyinstaller -F --noconsole --add-data "instructions.txt;." --add-data "backgroun
 
 ### Usage
 The game has two start modes START and ENTER. Additional information such as
-rules, controls, and notes can be found in INFO.
+rules, controls (e.g., keys), and notes can be found in INFO.
 
 <p align="center">
     <img src="https://github.com/nrudeys/Sudoku-Solver/blob/fec704913523408788eb4a3e284b04c530d60f79/start_game.png" width="350" height="350">
@@ -62,6 +62,12 @@ HARD: 17 - 27 given clues
   <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f4707b95ca6bf9aae30c3ad152baa717c341b740/med.png"     width="250">
   <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f4707b95ca6bf9aae30c3ad152baa717c341b740/hard.png" width="250">
 
+##### In game-buttons:
+New game: generates a new game with same selected difficulty/assist modes  
+Generate solution: generates a solution for Sudoku puzzle  
+Verify solution: Checks if current board has a valid solution  
+Back: Returns user to home screen  
+
 ##### Assist modes
 If assist is on, the game will indicate cells that have conflicting entries with one another by changing its
 font to red. Otherwise, all entries are blue regardless of conflictions.
@@ -81,6 +87,11 @@ Example:
 <p align="center">  
   <img src="https://github.com/nrudeys/Sudoku-Solver/blob/e22cface6112f0f9d9ead7120d05364e8282ffb0/enter.gif" alt="enter animated" />
 </p>
+
+##### In game-buttons:
+Clear: Removes all entries from board
+Solve: Generates a solution if one can be found and board is valid
+Back: Returns user to home screen
 
 ## RoadMap
 ## Acknowledgements
