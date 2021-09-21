@@ -54,13 +54,12 @@ EASY: 39 - 49 given clues
 MEDIUM: 28 - 38 given clues
 HARD: 17 - 27 given clues
 
-<img align="left" src="https://github.com/nrudeys/Sudoku-Solver/blob/f4707b95ca6bf9aae30c3ad152baa717c341b740/easy.png" width="300" height="300">
-
-<p align="center">
-    <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f4707b95ca6bf9aae30c3ad152baa717c341b740/med.png" width="300" height="300">
+<p float="left">
+  <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f4707b95ca6bf9aae30c3ad152baa717c341b740/easy.png" width="300" height="300">
+  <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f4707b95ca6bf9aae30c3ad152baa717c341b740/med.png"     width="300" height="300">
+  <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f4707b95ca6bf9aae30c3ad152baa717c341b740/hard.png" width="300" height="300">
 </p>
 
-<img align="right" src="https://github.com/nrudeys/Sudoku-Solver/blob/f4707b95ca6bf9aae30c3ad152baa717c341b740/hard.png" width="300" height="300">
 
 ##### Assist modes
 If on, the game will indicate cells that have conflicting entries with one another
