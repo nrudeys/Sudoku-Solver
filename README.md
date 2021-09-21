@@ -36,7 +36,7 @@ pyinstaller -F --noconsole --add-data "instructions.txt;." --add-data "backgroun
 The game has two start modes START and ENTER. Additional information such as
 rules, controls, and notes can be found in INFO.
 
-![alt text](https://github.com/nrudeys/Sudoku-Solver/blob/fec704913523408788eb4a3e284b04c530d60f79/start_game.png =250x250)
+![alt text](https://github.com/nrudeys/Sudoku-Solver/blob/fec704913523408788eb4a3e284b04c530d60f79/start_game.png=250x250)
 
 
 #### START mode
