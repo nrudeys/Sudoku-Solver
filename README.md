@@ -75,7 +75,7 @@ font to red. Otherwise, all entries are blue regardless of conflictions.
   <img src="https://github.com/nrudeys/Sudoku-Solver/blob/61a3bb50631b8c4ca56e016ba83f3054cffcd6ed/assist.gif" alt="assist animated" width="350"/>
 </p>
   
-NOTE: assist mode can be changed mid-game
+NOTE: assist mode can be changed mid-game 
 
 ### ENTER mode
 ENTER mode lets users provide their own Sudoku puzzle. It can generate a solution if given board is
