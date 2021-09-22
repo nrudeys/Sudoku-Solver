@@ -60,6 +60,7 @@ HARD: 17 - 27 given clues
   <img src="images\easy.png" width="250">
   <img src="images\med.png"  width="250">
   <img src="images\hard.png" width="250">
+</p>
 
 #### In game-buttons:
 <ins>New game</ins>: generates a new game with same selected difficulty/assist modes  
