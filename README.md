@@ -54,18 +54,18 @@ one is selected randomly.
 EASY: 39 - 49 given clues     
 <p align="center">
     <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/easy.png" alt="EASY example" width="300">  
-    <p align="center">Example of EASY puzzle generate with 42 given clues</p>
+    <p align="center">Example of a generated EASY puzzle</p>
 </p>
+<p align="center">
 MEDIUM: 28 - 38 given clues    
-<figure>
-<img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/med.png"  width="250">
-<figcaption>(Medium)  </figcaption>
-</figure>
+<img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/med.png"  width="300">
+    <p align="center">Example of a generated MEDIUM puzzle</p>
+</p>
+<p align="center">
 HARD: 17 - 27 given clues  
-<figure>
-<img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/hard.png" width="250">
-<figcaption>(Hard)</figcaption>
-</figure>
+<img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/hard.png" width="300">
+    <p align="center">Example of a generated HARD puzzle</p>
+</p>
 
 #### In game-buttons:
 <ins>New game</ins>: generates a new game with same selected difficulty/assist modes  
