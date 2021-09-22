@@ -72,7 +72,7 @@ If assist is on, the game will indicate cells that have conflicting entries with
 font to red. Otherwise, all entries are blue regardless of conflictions.
 
 <p align="center">  
-  <img src="images\assist.gif" alt="assist animated" width="350"/>
+  <img src="/images/assist.gif" alt="assist animated" width="350"/>
 </p>
 
 NOTE: assist mode can be changed mid-game 
