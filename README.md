@@ -56,13 +56,13 @@ EASY: 39 - 49 given clues
     <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/easy.png" alt="EASY example" width="300">  
     <p align="center">Example of a generated EASY puzzle</p>
 </p>
-
+<br>
 <p align="center">
 MEDIUM: 28 - 38 given clues    
 <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/med.png"  width="300">
     <p align="center">Example of a generated MEDIUM puzzle</p>
 </p>
-
+<br>
 <p align="center">
 HARD: 17 - 27 given clues  
 <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/hard.png" width="300">
