@@ -7,8 +7,7 @@ Generator to create and/or solver Sudoku puzzles
 2. [Getting Started](#getting-started)
     * [Technologies and Libraries](#technologies-and-libraries)
     * [How to Run](#how-to-run)
-    * [Usage](#usage)
-3. [RoadMap](#roadmap)
+3. [Usage](#usage)
 4. [Acknowledgements](#acknowledgements)
 
 ## Description
@@ -32,7 +31,7 @@ application
 #### NOTE: to create EXE application
 pyinstaller -F --noconsole --add-data "instructions.txt;." --add-data "background.png;." sudoku_solver.py
 
-### Usage
+## Usage
 The game has two start modes START and ENTER. Additional information such as
 rules, controls (e.g., keys), and notes can be found in INFO.
 
@@ -40,7 +39,7 @@ rules, controls (e.g., keys), and notes can be found in INFO.
     <img src="https://github.com/nrudeys/Sudoku-Solver/blob/fec704913523408788eb4a3e284b04c530d60f79/start_game.png" width="350" height="350">
 </p>
 
-#### START mode
+### START mode
 START mode generates an incompleted Sudoku puzzle  
 
 Before clicking START, an user can also choose a difficulty and assist mode. However, this is
@@ -51,7 +50,7 @@ one is selected randomly.
     <img src="https://github.com/nrudeys/Sudoku-Solver/blob/452a257be55c632b60f5cf717a5a85ccffcf4193/start_modes.png" width="350" height="350">
 </p>
 
-##### Difficulty modes
+#### Difficulty modes
 EASY: 39 - 49 given clues          
 MEDIUM: 28 - 38 given clues  
 HARD: 17 - 27 given clues  
@@ -62,36 +61,39 @@ HARD: 17 - 27 given clues
   <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f4707b95ca6bf9aae30c3ad152baa717c341b740/med.png"     width="250">
   <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f4707b95ca6bf9aae30c3ad152baa717c341b740/hard.png" width="250">
 
-##### In game-buttons:
+#### In game-buttons:
 <ins>New game</ins>: generates a new game with same selected difficulty/assist modes  
 <ins>Generate solution</ins>: generates a solution for Sudoku puzzle  
 <ins>Verify solution</ins>: Checks if current board has a valid solution  
 <ins>Back</ins>: Returns user to home screen  
 
-##### Assist modes
+#### Assist modes
 If assist is on, the game will indicate cells that have conflicting entries with one another by changing its
 font to red. Otherwise, all entries are blue regardless of conflictions.
 
-Example:
+<ins>Example</ins>:
 <p align="center">  
   <img src="https://github.com/nrudeys/Sudoku-Solver/blob/61a3bb50631b8c4ca56e016ba83f3054cffcd6ed/assist.gif" alt="assist animated" width="350"/>
 </p>
   
 NOTE: assist mode can be changed mid-game
 
-#### ENTER mode
+### ENTER mode
 ENTER mode lets users provide their own Sudoku puzzle. It can generate a solution if given board is
 valid and a solution can be found.
 
-Example:
+<ins>Example</ins>:
 <p align="center">  
   <img src="https://github.com/nrudeys/Sudoku-Solver/blob/e22cface6112f0f9d9ead7120d05364e8282ffb0/enter.gif" alt="enter animated" width="350"/>
 </p>
 
-##### In game-buttons:
+#### In game-buttons:
 <ins>Clear</ins>: Removes all entries from board  
 <ins>Solve</ins>: Generates a solution if one can be found and board is valid  
 <ins>Back</ins>: Returns user to home screen  
 
-## RoadMap
 ## Acknowledgements
+* [Rapid Tables](https://www.rapidtables.com/web/color/RGB_Color.html)
+* [Screencast-O-Matic](https://screencast-o-matic.com/)
+* [Sudoku.com](https://sudoku.com/how-to-play/sudoku-rules-for-complete-beginners/)
+* [tutorialspoint](https://www.tutorialspoint.com/python_pillow/python_pillow_blur_an_image.htm)
