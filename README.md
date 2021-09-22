@@ -55,11 +55,19 @@ EASY: 39 - 49 given clues
 MEDIUM: 28 - 38 given clues  
 HARD: 17 - 27 given clues  
 
-<ins>Examples</ins>:  
 <p float="left">
-  <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/easy.png" width="250">
-  <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/med.png"  width="250">
-  <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/hard.png" width="250">
+    <figure>
+    <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/easy.png" width="250">
+    <figcaption>Easy</figcaption>
+    </figure>
+    <figure>
+    <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/med.png"  width="250">
+    <figcaption>Medium</figcaption>
+    </figure>
+    <figure>
+    <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/hard.png" width="250">
+    <figcaption>Hard</figcaption>
+    </figure>
 </p>
 
 #### In game-buttons:
