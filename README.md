@@ -57,9 +57,9 @@ HARD: 17 - 27 given clues
 
 <ins>Examples</ins>:  
 <p float="left">
-  <img src="C:/Users/shahn/Downloads/easy.png" width="250">
-  <img src="C:/Users/shahn/Downloads/med.png"  width="250">
-  <img src="C:/Users/shahn/Downloads/hard.png" width="250">
+  <img src="images\easy.png" width="250">
+  <img src="images\med.png"  width="250">
+  <img src="images\hard.png" width="250">
 
 #### In game-buttons:
 <ins>New game</ins>: generates a new game with same selected difficulty/assist modes  
