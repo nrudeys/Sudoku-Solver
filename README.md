@@ -56,18 +56,20 @@ MEDIUM: 28 - 38 given clues
 HARD: 17 - 27 given clues  
 
 <p float="left">
+<figure>
     <figure>
     <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/easy.png" width="250">
-    <figcaption>Easy</figcaption>
+    <figcaption>(Easy)</figcaption>
     </figure>
     <figure>
     <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/med.png"  width="250">
-    <figcaption>Medium</figcaption>
+    <figcaption>(Medium)</figcaption>
     </figure>
     <figure>
     <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/hard.png" width="250">
-    <figcaption>Hard</figcaption>
+    <figcaption>(Hard)</figcaption>
     </figure>
+</figure>
 </p>
 
 #### In game-buttons:
