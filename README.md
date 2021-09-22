@@ -74,7 +74,7 @@ font to red. Otherwise, all entries are blue regardless of conflictions.
 <p align="center">  
   <img src="https://github.com/nrudeys/Sudoku-Solver/blob/61a3bb50631b8c4ca56e016ba83f3054cffcd6ed/assist.gif" alt="assist animated" width="350"/>
 </p>
-  
+
 NOTE: assist mode can be changed mid-game 
 
 ### ENTER mode
