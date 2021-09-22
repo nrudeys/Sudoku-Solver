@@ -1,6 +1,6 @@
 # Sudoku-Solver
 
-Generator to create and/or solver Sudoku puzzles
+Generator to create and/or solve Sudoku puzzles
 
 ## Table of Contents
 1. [Description](#description)
@@ -73,7 +73,7 @@ If assist is on, the game will indicate cells that have conflicting entries with
 font to red. Otherwise, all entries are blue regardless of conflictions.
 
 <p align="center">  
-  <img src="/images/assist.gif" alt="assist animated" width="350"/>
+  <img src="./images/assist.gif" alt="assist animated" width="350"/>
 </p>
 
 NOTE: assist mode can be changed mid-game 
@@ -83,7 +83,7 @@ ENTER mode lets users provide their own Sudoku puzzle. It can generate a solutio
 valid and a solution can be found.
 
 <p align="center">  
-  <img src="images/enter.gif" alt="enter animated" width="350"/>
+  <img src="enter.gif" alt="enter animated" width="350"/>
 </p>
 
 #### In game-buttons:
