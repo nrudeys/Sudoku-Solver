@@ -51,26 +51,21 @@ one is selected randomly.
 </p>
 
 #### Difficulty modes
-EASY: 39 - 49 given clues          
-MEDIUM: 28 - 38 given clues  
-HARD: 17 - 27 given clues  
-
-<p float="left">
+EASY: 39 - 49 given clues            
 <figure>
-    <figure>
-    <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/easy.png" width="250">
-    <figcaption>(Easy)</figcaption>
-    </figure>
-    <figure>
-    <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/med.png"  width="250">
-    <figcaption>(Medium)</figcaption>
-    </figure>
-    <figure>
-    <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/hard.png" width="250">
-    <figcaption>(Hard)</figcaption>
-    </figure>
+<img align="center" src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/easy.png" width="250">
+<figcaption>(Easy)</figcaption>
 </figure>
-</p>
+MEDIUM: 28 - 38 given clues    
+<figure>
+<img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/med.png"  width="250">
+<figcaption>(Medium)</figcaption>
+</figure>
+HARD: 17 - 27 given clues  
+<figure>
+<img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/hard.png" width="250">
+<figcaption>(Hard)</figcaption>
+</figure>
 
 #### In game-buttons:
 <ins>New game</ins>: generates a new game with same selected difficulty/assist modes  
