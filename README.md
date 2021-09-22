@@ -57,9 +57,9 @@ HARD: 17 - 27 given clues
 
 <ins>Examples</ins>:  
 <p float="left">
-  <img src="images/assist.gif" width="250">
-  <img src="https://github.com/nrudeys/Sudoku-Solver/blob/14c7fdd38e28d2c9610e4d2f8cd95bf43d0dbad4/images/med.png"  width="250">
-  <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f4707b95ca6bf9aae30c3ad152baa717c341b740/hard.png" width="250">
+  <img src="images/easy.png" width="250">
+  <img src="images/med.png"  width="250">
+  <img src="images/hard.png" width="250">
 
 #### In game-buttons:
 <ins>New game</ins>: generates a new game with same selected difficulty/assist modes  
@@ -72,7 +72,7 @@ If assist is on, the game will indicate cells that have conflicting entries with
 font to red. Otherwise, all entries are blue regardless of conflictions.
 
 <p align="center">  
-  <img src="https://github.com/nrudeys/Sudoku-Solver/blob/14c7fdd38e28d2c9610e4d2f8cd95bf43d0dbad4/images/assist.gif" alt="assist animated" width="350"/>
+  <img src="images/assist.gif" alt="assist animated" width="350"/>
 </p>
 
 NOTE: assist mode can be changed mid-game 
@@ -82,7 +82,7 @@ ENTER mode lets users provide their own Sudoku puzzle. It can generate a solutio
 valid and a solution can be found.
 
 <p align="center">  
-  <img src="https://github.com/nrudeys/Sudoku-Solver/blob/e22cface6112f0f9d9ead7120d05364e8282ffb0/enter.gif" alt="enter animated" width="350"/>
+  <img src="images/enter.gif" alt="enter animated" width="350"/>
 </p>
 
 #### In game-buttons:
