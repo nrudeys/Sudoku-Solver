@@ -52,12 +52,10 @@ one is selected randomly.
 
 #### Difficulty modes
 EASY: 39 - 49 given clues            
-<figure>
-    <p align="center">
-        <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/easy.png" width="250">
-        <figcaption>(EASY puzzle generate with 42 given clues)  </figcaption>
-    </p>
-</figure>
+<p align="center">
+    <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/easy.png" alt="EASY example" width="250">
+    (EASY puzzle generate with 42 given clues)
+</p>
 MEDIUM: 28 - 38 given clues    
 <figure>
 <img src="https://github.com/nrudeys/Sudoku-Solver/blob/f8abaf39872f3ea4d3ab781cb03f87bbe9132be6/images/med.png"  width="250">
